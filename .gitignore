@@ -1,0 +1,11 @@
+# Dependencies
+/vendor/
+# Environment and config files
+.env
+.env.*
+config/*.local.php
+config/*.env.php
+# IDE / OS files
+.vscode/
+# Storage (logs, cache, uploads)
+storage/
