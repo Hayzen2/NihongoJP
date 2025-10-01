@@ -1,5 +1,4 @@
 body {
-    font-family: 'Poppins', 'Noto Sans JP', sans-serif; 
     background: 
         linear-gradient(rgba(66, 66, 66, 0.6), rgba(221, 132, 208, 0.8)), 
         url('../assets/bg.png') center/cover  fixed;

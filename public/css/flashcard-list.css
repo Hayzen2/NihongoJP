@@ -1,0 +1,175 @@
+html, body {
+    background: linear-gradient(135deg, #ffeaf2, #fce1ec, #fff5f9);
+    background-attachment: fixed;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.container h1 {
+    font-weight: 700;
+    color: #b83b5e;    
+    text-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.container p {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+/* Flashcard List */
+.flashcard-list-container {
+    max-width: 2400px;       
+    width: 90%;             
+    margin: 0 auto;        
+    padding: 0 15px;        
+    box-sizing: border-box; 
+}
+
+.flashcard-list table {
+    border: 2px solid #ffb6c1;
+    --bs-table-bg: #fff !important; 
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(255, 182, 193, 0.25);
+    border-collapse: separate; /* allows border-radius */
+    border-spacing: 0;
+    transition: transform 0.2s;
+}
+
+.flashcard-list table thead {
+    position: relative;
+    color: #fff;
+}
+
+.flashcard-list table tbody tr:nth-child(odd) > td {
+    background-color: #fff3f7 !important;
+}
+.flashcard-list table tbody tr:nth-child(even) > td {
+  background-color: #ffffff !important;
+}
+
+.flashcard-list table tbody tr:hover {
+    transform: scale(1.03) translateY(-2px);
+    box-shadow: 0 10px 25px rgba(255, 182, 193, 0.6),
+                0 0 20px rgba(215, 143, 255, 0.5);
+    cursor: pointer;
+}
+
+.flashcard-list table thead::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #f3819d, #b83b5e, #2e2e2e);
+    z-index: 0;
+}
+.flashcard-list table thead th {
+    background: transparent !important; /* remove default background */
+    position: relative;
+    z-index: 1; /* text stays above gradient */
+    color: #fff;
+}
+
+/* Buttons */
+.flashcard-list table tbody .btn {
+    font-weight: bold;
+    border-radius: 50px;
+    padding: 4px 12px;
+    text-transform: capitalize;
+}
+
+/* View button */
+.flashcard-list .btn-info {
+    background: linear-gradient(135deg, #ff99cc, #ff6699);
+    color: #fff;
+}
+.flashcard-list .btn-info:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(255, 102, 153, 0.6);
+}
+
+/* Edit button */
+.flashcard-list .btn-primary {
+    background: linear-gradient(135deg, #ff5c8d, #ff3366);
+    color: #fff;
+}
+.flashcard-list .btn-primary:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(255, 51, 102, 0.6);
+}
+
+/* Delete button */
+.flashcard-list .btn-danger {
+    background: linear-gradient(135deg, #ff4d6d, #d6336c);
+    color: #fff;
+}
+.flashcard-list .btn-danger:hover {
+    background: linear-gradient(135deg, #e03159, #b02747);
+    box-shadow: 0 4px 12px rgba(214, 51, 108, 0.5);
+    transform: scale(1.05);
+}
+
+
+.btn-add-flashcard{
+    position: fixed;
+    top: 50%;
+    left: 25px;
+    transform: translateY(-50%); /* Center vertically */
+    background: linear-gradient(135deg, #ff6fa5, #ff3e78);
+    color: #fff;
+    border-radius: 50%;
+    width: 70px;
+    height: 70px;
+    font-size: 2.2rem;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    box-shadow: 0 8px 20px rgba(255, 51, 102, 0.4);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: pulse-glow 1.5s infinite;
+    z-index: 999;
+}
+
+/* Button subtle pulse */
+@keyframes pulse-glow {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 62, 120, 0.6);
+    }
+    70% {
+        box-shadow: 0 0 0 20px rgba(255, 62, 120, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 62, 120, 0);
+    }
+}
+
+.btn-add-flashcard:hover {
+    transform: scale(1.1);
+    box-shadow: 0 10px 25px rgba(243,129,157,0.5);
+}
+
+.controls label {
+    color: #d6336c;
+    margin-bottom: 3px;
+    font-weight: bold;
+}
+
+.controls input[type="text"], 
+.controls select {
+    border: 2px solid #d6336c;
+    border-radius: 8px;
+    padding: 6px 10px;
+    outline: none;
+    transition: all 0.2s;
+}
+
+
+.controls input[type="text"]:focus,
+.controls select:focus {
+    border-color: #ff3366;
+    box-shadow: 0 0 8px rgba(255,51,102,0.5);
+}

@@ -10,7 +10,7 @@
                     <a class="nav-link" href="/">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/courses">Courses</a>
+                    <a class="nav-link" href="/lessons">Lessons</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/exercises">Exercises</a>
@@ -19,7 +19,7 @@
                     <a class="nav-link" href="/quizzes">Quizzes</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/flashcards">Flashcards</a>
+                    <a class="nav-link" href="/flashcards">Flashcard</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/subscription">Subscription</a>

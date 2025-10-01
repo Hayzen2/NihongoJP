@@ -21,5 +21,12 @@ document.addEventListener("DOMContentLoaded", () => {
             sakura.remove();
         });
     }
-    setInterval(createSakura, 350);
+    function generateSakura() {
+        // only generate if tab is visible
+        if (!document.hidden) {
+            createSakura();
+        }
+    }
+
+    setInterval(generateSakura, 350);
 });
