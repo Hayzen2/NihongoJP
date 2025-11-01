@@ -13,9 +13,6 @@
                     <a class="nav-link" href="/lessons">Lessons</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/exercises">Exercises</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" href="/quizzes">Quizzes</a>
                 </li>
                 <li class="nav-item">
@@ -23,6 +20,9 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/subscription">Subscription</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/buy-books">Buy Books</a>
                 </li>
             </ul>
         </div>

@@ -11,3 +11,7 @@ $levels = ['N5', 'N4', 'N3', 'N2', 'N1'];
         </a>
     <?php endforeach; ?>
 </div>
+<div class="mb-3">
+    <span class="fw-bold me-2">Search for words:</span>
+    
+</div>
