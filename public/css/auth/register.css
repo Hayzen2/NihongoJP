@@ -83,49 +83,66 @@ body{
   color: #00cc66;
 }
 
-/* Form controls */
+.is-invalid-not-match {
+  color: #e60073;
+  transition: color 0.3s ease;
+}
+.is-invalid-not-match::before {
+  content: "❌ ";
+  color: #ff3366;
+  font-weight: bold;
+}
+.form-control {
+  border-radius: 10px !important;
+  border: 1px solid #ff99cc !important;
+  transition: all 0.3s ease !important;
+}
+.form-control:focus {
+  border-color: #ff66b3 !important; 
+  box-shadow: 0 0 10px rgba(255, 153, 204, 0.6) !important;
+}
+
 .form-control, .form-select {
     border-radius: 10px;
-    border: 1px solid #ff99cc;
+    border: 1px solid #ff99cc !important;
     transition: all 0.3s ease;
 }
 
 .form-control:focus, .form-select:focus {
-    border-color: #ff66b3;
-    box-shadow: 0 0 10px rgba(255, 153, 204, 0.6);
+    border-color: #ff66b3 !important;
+    box-shadow: 0 0 10px rgba(255, 153, 204, 0.6) !important;
 }
 
-.btn-primary {
-    background: linear-gradient(90deg, #ff99cc, #ff66b3);
-    border: none;
-    border-radius: 10px;
-    font-weight: bold;
-    transition: all 0.3s ease;
+.btn-primary.signup-button{
+  background: linear-gradient(90deg, #ff99cc, #ff66b3);
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  transition: all 0.3s ease;
 }
 
-.btn-primary:hover {
-    background: linear-gradient(90deg, #ff66b3, #ff99cc);
-    box-shadow: 0 5px 15px rgba(255, 153, 204, 0.6);
-    transform: scale(1.05);
+.btn-primary.signup-button:hover {
+  background: linear-gradient(90deg, #ff66b3, #ff99cc);
+  box-shadow: 0 5px 15px rgba(255, 153, 204, 0.6);
+  transform: scale(1.05);
 }
 
-.btn-secondary {
-    background-color: transparent;
-    border: 1px solid #ffcce6;
-    color: #ffcce6;
-    border-radius: 10px;
-    transition: all 0.3s ease;
+.btn-secondary.back-button {
+  background-color: transparent;
+  border: 1px solid #bf568c;
+  color: #c42979;
+  border-radius: 10px;
+  transition: all 0.3s ease;
 }
 
-.btn-secondary:hover {
-    background-color: #ff99cc;
-    color: #fff;
-    border-color: #ff66b3;
+.btn-secondary.back-button:hover {
+  background-color: #ff99cc;
+  border-color: #ff66b3;
 }
 
 .location-row {
-    display: flex;
-    gap: 10px;
+  display: flex;
+  gap: 10px;
 }
 
 .location-row select {

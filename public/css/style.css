@@ -10,6 +10,7 @@ body{
 
 .navbar .navbar-brand:hover {
     transform: scale(1.1);
+    text-decoration: none;
 }
 
 .navbar {
@@ -25,6 +26,7 @@ body{
 }
 .nav-link:hover {
     color: #ffb6d9 !important;
+    text-decoration: none;
 }
 
 .footer {

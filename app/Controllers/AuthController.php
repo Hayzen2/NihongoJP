@@ -19,7 +19,7 @@
         public function showLoginForm() {
             render('preLoggedIn/login', [
                 'styles' => ['auth/login'],
-                'scripts' => ['handleCredentials']
+                'scripts' => ['handleCredentials'],
             ]);
         }
         public function handleGoogleLogin() {
@@ -38,11 +38,13 @@
                     $name = $payload['name'];
                     $user = $this->userModel->getUserByEmail($email);
                     if (!$user) {
-                        $userId = $this->userModel->createUserGoogle($email, $name);
+                        $user= $this->userModel->createUserGoogle($email, $name);
                     } else{
-                        $userId = $user['id'];
+                        $user = $this->userModel->getUserByEmail($email);
                     }
-                    $_SESSION['user_id'] = $userId;
+                    $_SESSION['user'] = $user;
+                    header("Location: /");
+                    exit;
                     
                 } else {
                     http_response_code(401);
@@ -62,7 +64,7 @@
                 $user = $this->userModel->getUserByUsername($username);
                 if($user) {
                     if($this->userModel->verifyPassword($password, $user['password_hash'])) {
-                        $_SESSION['user_id'] = $user['id'];
+                        $_SESSION['user'] = $user;
                         header("Location: /");
                         exit;
                     } else {
@@ -90,8 +92,8 @@
                     alert('User already exists.');
                 } else {
                     $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-                    $userId = $this->userModel->createUserLocal($email, $name, $passwordHash, $username, $country_id, $province_id, $city_id);
-                    $_SESSION['user_id'] = $userId;
+                    $user = $this->userModel->createUserLocal($email, $name, $passwordHash, $username, $country_id, $province_id, $city_id);
+                    $_SESSION['user'] = $user;
                     header("Location: /");
                     exit;
                 }
@@ -119,6 +121,7 @@
             session_start();
             session_unset();
             session_destroy();
+            header("Cache-Control: no-cache, no-store, must-revalidate");
             header("Location: /login");
             exit;
         }
@@ -141,31 +144,89 @@
             exit;
         }
 
-        public function handleForgotPassword() {
+        public function sendPasswordResetOTP() {
             if($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $email = $_POST['email'] ?? '';
-                $user = $this->userModel->getUserByEmail($email);
+                $user = $this->userModel->getLocalUserByEmail($email);
                 if($user) {
-                    #generate 5 digit OTP
-                    $otp = random_int(10000, 99999);
-
-                    //Store OTP in session for 5 minutes
-                    $_SESSION['password_reset_otp'] = $otp;
-                    $_SESSION['password_reset_email'] = $email;
-                    $_SESSION['otp_expiry'] = time() + 300; // 5 minutes from now
-                    //Send OTP via email
-                    $to = $email;
-                    $subject = "NihongoJP Password Reset OTP";
-                    $headers = "From: no-reply@nihongojp.com\r\n";
-                    
-
-                    
-                    header("Location: /reset-password");
+                    $this->userModel->generateAndSendOTP($email);
+                    header("Location: /login/forgot-password/input-otp");
+                    exit;
                 } else {
                     http_response_code(404);
                     return 'No email found for that account.';
                 }
             }
         }
-}
+        public function showVerifyOTPForm() {
+            $email = $_GET['email'] ?? '';
+            render('preLoggedIn/inputOTP', [
+                'styles' => ['auth/inputOTP', 'auth/forgotPassword'],
+                'scripts' => ['handleCredentials'],
+                'email' => $email
+            ]);
+        }
+        public function verifyPasswordResetOTP() {
+            if($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $email = $_SESSION['otp-email'] ?? '';
+                if(!$email) {
+                    header("Location: /login/forgot-password/reset-expired");
+                    exit;
+                }
+                $otpParts = [
+                    $_POST['otp1'] ?? '',
+                    $_POST['otp2'] ?? '',
+                    $_POST['otp3'] ?? '',
+                    $_POST['otp4'] ?? '',
+                    $_POST['otp5'] ?? ''
+                ];
+                $otp = implode('', $otpParts); // Combine parts to form full OTP
+                $this->userModel->verifyOTP($otp, $email);
+                header("Location: /login/forgot-password/reset-password-form");
+                exit;
+            }
+        }
+        public function showResetPasswordForm() {
+            render('preLoggedIn/resetPassword', [
+                'styles' => ['auth/forgotPassword'],
+                'scripts' => ['handleCredentials']
+            ]);
+        }
+        public function resetPassword() {
+            if($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $email = $_SESSION['reset-email'] ?? '';
+                $expiry = $_SESSION['reset-expiry'] ?? '';
+                if(time() > $expiry) {
+                    unset($_SESSION['reset-email']);
+                    unset($_SESSION['reset-expiry']);
+                    header("Location: /login/forgot-password/reset-expired");
+                    exit;
+                }
+                if(!$email) {
+                    header("Location: /login/forgot-password/reset-expired");
+                    exit;
+                }
+                $newPassword = $_POST['new_password'] ?? '';
+                $confirmPassword = $_POST['confirm_password'] ?? '';
+                if($newPassword !== $confirmPassword) {
+                    http_response_code(400);
+                    return 'Passwords do not match.';
+                }
+                
+                $passwordHash = password_hash($newPassword, PASSWORD_DEFAULT);
+                $this->userModel->updatePasswordByEmail($email, $passwordHash);
+                // Destroy session
+                unset($_SESSION['reset-email']);
+                unset($_SESSION['reset-expiry']);
+                header("Location: /login");
+                exit;
+            }
+        }
+        public function showExpiredTokenOrOTPPage() {
+            render('preLoggedIn/resetExpired', [
+                'styles' => ['auth/forgotPassword'],
+                'scripts' => ['handleCredentials']
+            ]);
+        }
+    }
 ?>

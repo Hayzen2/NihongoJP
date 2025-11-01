@@ -20,8 +20,8 @@
             <input type="password" class="form-control" id="password" name="password" required>
           </div>
 
-          <button type="submit" class="btn btn-primary w-100 mb-2">Login</button>
-          <a class="btn btn-secondary w-100 mb-3" href="/login/forgot-password">Forgot Password?</a>
+          <button type="submit" class="btn btn-primary login-btn w-100 mb-2">Login</button>
+          <a class="btn btn-secondary back-button w-100 mb-3" href="/login/forgot-password">Forgot Password?</a>
 
           <div class="text-center mb-3">— or —</div>
 
@@ -51,7 +51,6 @@
       </div>
     </div>
 
-    <!-- Welcome section (right) -->
     <div class="col-md-5 welcome-section d-none d-md-block order-1 order-md-2">
       <h1 class="welcome-title">🌸 Welcome back to <span>NihongoJP!</span></h1>
       <p class="welcome-subtitle">Continue your Japanese learning journey</p>

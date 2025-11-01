@@ -67,7 +67,7 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary w-100 mb-2">Sign Up</button>
+            <button type="submit" class="btn btn-primary signup-button w-100 mb-2">Sign Up</button>
             <div class="text-center mb-2">— or —</div>
             <div id="g_id_onload"
               data-client_id="<?= ($_ENV['GOOGLE_CLIENT_ID']) ?>"
@@ -88,7 +88,7 @@
                 data-locale="en">
               </div>
             </div>
-            <a class="btn btn-secondary w-100" href="/login">Already have an account? Login</a>
+            <a class="btn btn-secondary w-100 back-button" href="/login">Already have an account? Login</a>
           </form>
         </div>
       </div>

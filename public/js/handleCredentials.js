@@ -55,6 +55,25 @@ username.on('input', function() {
         }
     });
 });
+
+let inputs = $('#otp-inputs input');
+
+inputs.each((index, input) => {
+    $(input).on('input', () => {
+        if (input.value.length === input.maxLength) { // Move to next input
+            if (index < inputs.length - 1) {
+                inputs[index + 1].focus();
+            }
+        }
+    }); 
+    $(input).on('keydown', (e) => { // Handle backspace to move back
+        if (e.key === 'Backspace' && input.value.length === 0) {
+            if (index > 0) {
+                inputs[index - 1].focus();
+            }
+        }
+    });
+});
 /* Cookies have:
 PHPSESSID: to know if user is logged in
 Preferences: languages

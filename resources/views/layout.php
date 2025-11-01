@@ -20,7 +20,7 @@
     <body>
         <header class="d-flex flex-column">
             <?php 
-                if (isset($_SESSION['user_id']) && !empty($_SESSION['user_id'])) {
+                if (isset($_SESSION['user']) && $_SESSION['user']) {
                     include __DIR__ . '/header.php';
                 } else {
                     include __DIR__ . '/headerPreLoggedIn.php';

@@ -16,16 +16,26 @@
           <div class="alert alert-success text-center"><?php echo $success; ?></div>
         <?php endif; ?>
 
-        <form method="POST" action="/login/forgot-password/reset?email=<?php echo urlencode($email); ?>">
+        <form method="POST" action="/login/forgot-password/reset-password">
             <div class="mb-3">
-                <label for="new_password" class="form-label">New Password</label>
-                <input type="password" class="form-control" id="new_password" name="new_password" required placeholder="Enter your new password">
+              <label for="password" class="form-label">Password<span class="required">*</span></label>
+              <input type="password" class="form-control" id="password" name="password" required>
+              <ul class="password-requirements mt-2">
+                <li>Password must have at least 8 characters</li>
+                <li>Password must include at least 1 number</li>
+                <li>Password must include at least 1 uppercase letter</li>
+                <li>Password must include at least 1 lowercase letter</li>
+                <li>Password must include at least 1 special character</li>
+              </ul>
             </div>
+
             <div class="mb-3">
-                <label for="confirm_password" class="form-label">Confirm New Password</label>
-                <input type="password" class="form-control" id="confirm_password" name="confirm_password" required placeholder="Confirm your new password">
+              <label for="confirm_password" class="form-label">Confirm Password<span class="required">*</span></label>
+              <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+              <div class="is-invalid-not-match">Passwords do not match.</div>
             </div>
-          <a href="/login" class="btn btn-secondary w-100">Back to Login</a>
+            <button type="submit" class="btn btn-primary w-100 mb-2">Reset Password</button>
+            <a href="/login" class="btn btn-secondary w-100">Back to Login</a>
         </form>
 
         <p class="mt-4 text-center">

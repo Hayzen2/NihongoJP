@@ -14,7 +14,7 @@ use App\Controllers\UserController;
 use App\Controllers\FlashcardController;
 use App\Controllers\SubscriptionController;
 use App\Controllers\ContactController;
-use Dotenv\Dotenv;
+use Dotenv\Dotenv; // Load environment variables like GOOGLE_CLIENT_ID
 
 $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
 $dotenv->load();
@@ -41,6 +41,12 @@ $routes = [
     '/register/local' => [AuthController::class, 'handleLocalRegister'],
     '/register/google' => [AuthController::class, 'handleGoogleLogin'],
     '/login/forgot-password' => [AuthController::class, 'showForgotPasswordForm'],
+    '/login/forgot-password/send-otp' => [AuthController::class, 'sendPasswordResetOTP'],
+    '/login/forgot-password/input-otp' => [AuthController::class, 'showVerifyOTPForm'],
+    '/login/forgot-password/verify-otp' => [AuthController::class, 'verifyPasswordResetOTP'],
+    '/login/forgot-password/reset-password-form' => [AuthController::class, 'showResetPasswordForm'],
+    '/login/forgot-password/reset-password' => [AuthController::class, 'resetPassword'],
+    '/login/forgot-password/reset-expired' => [AuthController::class, 'showExpiredTokenOrOTPPage'],
     '/lessons'      => [LessonController::class, 'showLessonLists'],
     '/exercises'    => [ExerciseController::class, 'showExerciseLists'],
     '/quizzes'      => [QuizController::class, 'showQuizLists'],
@@ -57,7 +63,6 @@ $routes = [
     '/api/countries' => [AuthController::class, 'getCountries'],
     '/api/provinces/:countryId' => [AuthController::class, 'getProvincesByCountry'],
     '/api/cities/:provinceId' => [AuthController::class, 'getCitiesByProvince'],
-    '/check-username/:username' => [AuthController::class, 'checkUsernameAvailability'],
 ];
 
 $found = false;
@@ -65,7 +70,10 @@ $publicRoutes = ['/login', '/register',
                 '/register/local', '/register/google', '/login/google',
                 '/login/forgot-password', '/login/local', '/contact',
                 '/api/countries', '/api/provinces/:countryId',
-                '/api/cities/:provinceId'];
+                '/api/cities/:provinceId', '/login/forgot-password/send-otp',
+                '/login/forgot-password/input-otp',
+                '/login/forgot-password/verify-otp', '/login/forgot-password/reset-password-form',
+                '/login/forgot-password/reset-expired'];
 
 $isPublic = false;
 foreach ($publicRoutes as $route) {
@@ -75,10 +83,10 @@ foreach ($publicRoutes as $route) {
     }
 }
 
-if (!isset($_SESSION['user_id']) && !$isPublic) {
+if (!isset($_SESSION['user']) && !$isPublic) {
     header("Location: /login");
     exit;
-} elseif (isset($_SESSION['user_id']) && in_array($uri, ['/login', '/register'])) {
+} elseif (isset($_SESSION['user']) && in_array($uri, ['/login', '/register'])) {
     header("Location: /");
     exit;
 }
