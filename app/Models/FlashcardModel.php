@@ -6,14 +6,14 @@ class FlashcardModel {
 
     private $id;
     private $topic;
-    private $author;
+    private $user_id;
     private $status;
     private $createdAt;
     private $updatedAt;
     public function __construct(
         $id = null,
         $topic = null,
-        $author = null,
+        $user_id = null,
         $status = null,
         $createdAt = null,
         $updatedAt = null,
@@ -21,7 +21,7 @@ class FlashcardModel {
     ) {
         $this->id = $id;
         $this->topic = $topic;
-        $this->author = $author;
+        $this->user_id = $user_id;
         $this->status = $status;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
@@ -36,8 +36,8 @@ class FlashcardModel {
     public function getTopic(){
         return $this->topic;
     }
-    public function getAuthor() {
-        return $this->author;
+    public function getUserId() {
+        return $this->user_id;
     }
     public function getStatus() {
         return $this->status;
@@ -48,18 +48,26 @@ class FlashcardModel {
     public function getUpdatedAt() {
         return $this->updatedAt;
     }
+    public function getUsernameByUserId($user_id) {
+        $stmt = $this->pdo->prepare("SELECT username FROM users WHERE id = :user_id");
+        $stmt->execute([':user_id' => $user_id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['username'];
+    }
     public function getBySorting($search='', $sort='', $order='') {
         $orders = strtoupper($order) === 'ASC' ? 'ASC' : 'DESC';
         $sorts = in_array($sort, ['topic', 'created_at', 'updated_at']) ? $sort : 'created_at';
 
         //Base query
-        $sql = "SELECT * FROM flashcards ";
+        $sql = "SELECT f.*, u.name AS author_name
+            FROM flashcards f
+            JOIN users u ON f.user_id = u.id ";
         $params = [];
 
         //search by topic
         if ($search) {
-            $sql .= "WHERE topic LIKE :search or author LIKE :search";
-            $params[':search'] = "%$search%"; 
+            $sql .= "WHERE f.topic LIKE :search OR u.name LIKE :search";
+            $params[':search'] = "%$search%";
         }
 
         $sql .= " ORDER BY $sorts $orders";
@@ -73,7 +81,7 @@ class FlashcardModel {
             $flashcards[] = new FlashcardModel(
                 $row['id'],
                 $row['topic'],
-                $row['author'],
+                $row['user_id'],
                 $row['status'],
                 $row['created_at'],
                 $row['updated_at']
@@ -90,7 +98,7 @@ class FlashcardModel {
             return new FlashcardModel(
                 $result['id'],
                 $result['topic'],
-                $result['author'],
+                $result['user_id'],
                 $result['status'],
                 $result['created_at'],
                 $result['updated_at']
@@ -102,21 +110,21 @@ class FlashcardModel {
         return $this->pdo->lastInsertId();
     }
 
-    public function create($topic, $author, $status) {
-        $stmt = $this->pdo->prepare("INSERT INTO flashcards (topic, author, status, created_at, updated_at) VALUES (:topic, :author, :status, NOW(), NOW())");
+    public function create($topic, $user_id, $status) {
+        $stmt = $this->pdo->prepare("INSERT INTO flashcards (topic, user_id, status, created_at, updated_at) VALUES (:topic, :user_id, :status, NOW(), NOW())");
         return $stmt->execute([
             ':topic' => $topic,
-            ':author' => $author,
+            ':user_id' => $user_id,
             ':status' => $status,
         ]);
     }
 
-    public function update($id, $topic, $author, $status) {
-        $stmt = $this->pdo->prepare("UPDATE flashcards SET topic = :topic, author = :author, status = :status, updated_at = NOW() WHERE id = :id");
+    public function update($id, $topic, $user_id, $status) {
+        $stmt = $this->pdo->prepare("UPDATE flashcards SET topic = :topic, user_id = :user_id, status = :status, updated_at = NOW() WHERE id = :id");
         return $stmt->execute([
             ':id' => $id,
             ':topic' => $topic,
-            ':author' => $author,
+            ':user_id' => $user_id,
             ':status' => $status,
         ]);
     }

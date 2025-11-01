@@ -16,6 +16,12 @@
             $this->provincesModel = new ProvincesModel();
             $this->citiesModel = new CitiesModel();
         }
+        public function showPrivacyPolicy() {
+            render('privacy-policy', [
+                'styles' => ['privacy-policy'],
+                'scripts' => []
+            ]);
+        }
         public function showLoginForm() {
             render('preLoggedIn/login', [
                 'styles' => ['auth/login'],

@@ -23,7 +23,7 @@
                     $data [] = [
                        'id' => $card->getId(),
                        'topic' => $card->getTopic(),
-                       'author' => $card->getAuthor(),
+                       'author' => $card->getUsernameByUserId($card->getUserId()),
                         'status' => $card->getStatus(),
                        'created_at' => $card->getCreatedAt(),
                        'updated_at' => $card->getUpdatedAt(),
@@ -48,16 +48,15 @@
         public function createNewFlashcard() {
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $topic = $_POST['topic'] ?? '';
-                $author = $_POST['author'] ?? '';
                 $status = $_POST['status'] ?? 'public';
                 $questions = $_POST['questions'] ?? [];
                 $answers = $_POST['answers'] ?? [];
-                if (!$topic || !$author || empty($questions) || empty($answers)) {
+                if (!$topic || empty($questions) || empty($answers)) {
                     http_response_code(400);
                     echo 'All fields are required.';
                     return;
                 }
-                $this->flashcardModel->create($topic, $author, $status);
+                $this->flashcardModel->create($topic, $_SESSION['user']['id'], $status);
                 $flashcardId = $this->flashcardModel->getLastInsertedId();
 
                 foreach ($questions as $index => $question) { // Use index to match question with answer

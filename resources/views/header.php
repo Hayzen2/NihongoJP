@@ -24,9 +24,6 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/subscription">Subscription</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/contact">Contact</a>
-                </li>
             </ul>
         </div>
         <div class="navbar-collapse" id="navbarNav">

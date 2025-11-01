@@ -34,6 +34,7 @@ if ($uri === '/home' || $uri === '/homepage') {
 
 $routes = [
     '/'             => [HomepageController::class, 'showHomepage'],
+    '/privacy' => [AuthController::class, 'showPrivacyPolicy'],
     '/login'        => [AuthController::class, 'showLoginForm'],
     '/register'     => [AuthController::class, 'showRegisterForm'],
     '/login/local'  => [AuthController::class, 'handleLocalLogin'],
@@ -47,7 +48,7 @@ $routes = [
     '/login/forgot-password/reset-password-form' => [AuthController::class, 'showResetPasswordForm'],
     '/login/forgot-password/reset-password' => [AuthController::class, 'resetPassword'],
     '/login/forgot-password/reset-expired' => [AuthController::class, 'showExpiredTokenOrOTPPage'],
-    '/lessons'      => [LessonController::class, 'showLessonLists'],
+    '/lessons'      => [LessonController::class, 'showLessonChoices'],
     '/exercises'    => [ExerciseController::class, 'showExerciseLists'],
     '/quizzes'      => [QuizController::class, 'showQuizLists'],
     '/rank'         => [RankController::class, 'showRankLists'],
@@ -58,7 +59,6 @@ $routes = [
     '/flashcards/edit/:id' => [FlashcardController::class, 'showEditFlashcardForm'],
     '/flashcards/delete/:id' => [FlashcardController::class, 'deleteFlashcard'],
     '/subscription' => [SubscriptionController::class, 'showSubscriptionPlans'],
-    '/contact'      => [ContactController::class, 'showContactForm'],
     '/logout'       => [AuthController::class, 'logout'],
     '/api/countries' => [AuthController::class, 'getCountries'],
     '/api/provinces/:countryId' => [AuthController::class, 'getProvincesByCountry'],

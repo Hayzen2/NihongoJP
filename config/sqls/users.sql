@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS users (
     password_hash VARCHAR(255),
     auth_provider ENUM('local', 'google') DEFAULT 'local',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    user_rank VARCHAR(100),  
     FOREIGN KEY (country_id) REFERENCES countries(id),
     FOREIGN KEY (state_id) REFERENCES states(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

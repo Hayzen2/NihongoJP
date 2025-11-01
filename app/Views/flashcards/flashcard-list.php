@@ -61,7 +61,7 @@
                     <?php foreach($flashcards as $card): ?>
                         <tr>
                             <td class="fw-bold" data-label="Topic"><?= $card->getTopic() ?></td>
-                            <td class="fw-bold" data-label="Author"><?= $card->getAuthor() ?></td>
+                            <td class="fw-bold" data-label="Author"><?= $card->getUsernameByUserId($card->getUserId()) ?></td>
                             <td data-label="Status"><?= $card->getStatus() === 'public' ? '🌍 Public' : '🔒 Private' ?></td>
                             <td data-label="Created At"><?= date("d F Y", strtotime($card->getCreatedAt())) ?></td>
                             <td data-label="Updated At"><?= date("d F Y", strtotime($card->getUpdatedAt())) ?></td>

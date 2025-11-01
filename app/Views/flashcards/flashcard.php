@@ -1,7 +1,7 @@
 <div class="flashcard-container">
     <div class="flashcard-header text-center mb-4 mt-4">
         <h2>Flashcard Topic: <?= htmlspecialchars($flashcard->getTopic()) ?></h2>
-        <h5>Author: <?= htmlspecialchars($flashcard->getAuthor()) ?></h5>
+        <h5>Author: <?= htmlspecialchars($flashcard->getUsernameByUserId($flashcard->getUserId())) ?></h5>
     </div>
 
     <?php if(!empty($flashcardQASet)): ?>
