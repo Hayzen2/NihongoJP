@@ -1,26 +1,43 @@
-<div container mt-5 text-center">
-    <h1 class="mb-4">Flashcards</h1>
-    <p class="mb-4">Enhance your Japanese vocabulary with our interactive flashcards!</p>
-    <div class="flashcard-container">
-        <div class="flashcard" id="flashcard">
-            <div class="front">
-                <h2 id="question">Question</h2>
-                <div>
-                    <img src="/assets/flashcard_image.png" alt="Flashcard Image" class="img-fluid">
-                </div>
-            </div>
-            <div class="back">
-                <h2 id="answer">Answer</h2>
-                <div>
-                    <img src="/assets/flashcard_image.png" alt="Flashcard Image" class="img-fluid">
-                </div>
-            </div>
-        </div>
-        <button id="show-answer" class="btn btn-primary mt-3">Show Answer</button>
-        <button id="next-card" class="btn btn-secondary mt-3">Next Card</button>
-</div>
-</div>
+<div class="flashcard-container">
+    <div class="flashcard-header text-center mb-4 mt-4">
+        <h2>Flashcard Topic: <?= htmlspecialchars($flashcard->getTopic()) ?></h2>
+        <h5>Author: <?= htmlspecialchars($flashcard->getAuthor()) ?></h5>
+    </div>
 
-<?php foreach($flashcards as $card): ?>
-                <p><?= $card->getQuestion() ?> - <?= $card->getAnswer() ?> </p>
-            <?php endforeach ?>
+    <?php if(!empty($flashcardQASet)): ?>
+        <div class="flashcard-deck text-center mb-3 d-flex justify-content-center align-items-center">
+            <?php foreach($flashcardQASet as $index => $qa): ?>
+                <div class="flashcard-wrapper <?= $index === 0 ? 'active' : '' ?>">
+                    <div class="flashcard">
+                        <!--Front Side-->
+                        <div class="flashcard-front">
+                            <h3>Question #<?= $index + 1 ?></h3>
+                            <p><?= htmlspecialchars($qa->getQuestion()) ?></p>
+                            <p class="flip-hint">(Click to flip)</p>
+                        </div>
+                        <!--Back Side-->
+                        <div class="flashcard-back">
+                            <h4>Answer</h4>
+                            <p><?= htmlspecialchars($qa->getAnswer()) ?></p>
+                            <p class="flip-hint">(Click to flip back)</p>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+
+        <div class="controls mt-3 text-center">
+            <button class="btn btn-prev">⟵ Prev</button>
+            <button class="btn btn-next">Next ⟶</button>
+            <button class="btn btn-reshuffle">
+                <i class="bi bi-shuffle"></i> Reshuffle
+            </button>
+        </div>
+    <?php else: ?>
+        <p>No questions available for this flashcard.</p>
+    <?php endif; ?>
+
+    <div class="text-center mt-4">
+        <a href="/flashcards" class="btn btn-back">⟵ Back to Flashcards</a>
+    </div>
+</div>

@@ -1,23 +1,22 @@
-document.addEventListener("DOMContentLoaded", () => {
+$(document).ready(() => {
     function createSakura() {
-        const sakuraContainer = document.querySelector('.sakura-container');
-        if (!sakuraContainer) return;
-        const sakura = document.createElement('div');
-        sakura.classList.add('sakura');
+        const sakuraContainer = $('.sakura-container');
+        if (sakuraContainer.length === 0) return;
+        const sakura = $('<div></div>').addClass('sakura');
         // randomize horizontal start
-        sakura.style.left = Math.random() * 100 + 'vw';
-        sakura.style.animationDelay = Math.random() * 3 + "s";
-        
-        // Calculate duration so speed is constant 
+        sakura.css('left', Math.random() * 100 + 'vw');
+        sakura.css('animationDelay', Math.random() * 3 + "s");
+
+        // Calculate duration so speed is constant
         const fallDistance = window.innerHeight + 50; // start above + full screen
         const speed = 100; // px per second
         const duration = fallDistance / speed; // in seconds
-        sakura.style.animationDuration = `${duration}s`;
+        sakura.css('animationDuration', `${duration}s`);
 
-        sakuraContainer.appendChild(sakura);
+        sakuraContainer.append(sakura);
 
         // remove when animation ends
-        sakura.addEventListener("animationend", () => {
+        sakura.on("animationend", () => {
             sakura.remove();
         });
     }

@@ -20,18 +20,20 @@
         $pdo = new PDO("mysql:host=$severname;dbname=$dbname", $username, $password); //Connect to the database
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-
-        //Create flashcard table
-        $sql = "CREATE TABLE IF NOT EXISTS flashcards (
-            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            topic VARCHAR(100) NOT NULL,
-            author VARCHAR(100) NOT NULL,
-            question VARCHAR(500) NOT NULL,
-            answer VARCHAR(500) NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-        )";
-        $pdo->exec($sql);
+        if($pdo->query("SHOW TABLES LIKE 'countries'")->rowCount() <= 0){
+            $pdo->exec(file_get_contents(__DIR__ . '/sqls/countries.sql'));
+            
+        } elseif($pdo->query("SHOW TABLES LIKE 'states'")->rowCount() <= 0){
+            $pdo->exec(file_get_contents(__DIR__ . '/sqls/states.sql'));
+        }
+        $sqlFiles = [
+            __DIR__ . '/sqls/users.sql',
+            __DIR__ . '/sqls/flashcards.sql',
+            __DIR__ . '/sqls/flashcards_qa.sql'
+        ];
+        foreach($sqlFiles as $sqlFile){
+            $pdo->exec(file_get_contents($sqlFile));
+        }
     }catch(PDOException $e){
         die("Connection failed: " . $e->getMessage());
     }

@@ -7,29 +7,28 @@ class FlashcardModel {
     private $id;
     private $topic;
     private $author;
-    private $questions;
-    private $answers;
+    private $status;
     private $createdAt;
     private $updatedAt;
     public function __construct(
         $id = null,
         $topic = null,
         $author = null,
-        $questions = null,
-        $answers = null,
+        $status = null,
         $createdAt = null,
-        $updatedAt = null
+        $updatedAt = null,
+        $pdo = null
     ) {
         $this->id = $id;
         $this->topic = $topic;
         $this->author = $author;
-        $this->question = $questions;
-        $this->answer = $answers;
+        $this->status = $status;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
-
-        require_once __DIR__ . '/../../config/setup_database.php';
-        $this->pdo = getPDO();
+        $this->pdo = $pdo ?: (function() {
+            require_once __DIR__ . '/../../config/setup_database.php';
+            return getPDO();
+        })();
     }
     public function getId() {
         return $this->id;
@@ -40,11 +39,8 @@ class FlashcardModel {
     public function getAuthor() {
         return $this->author;
     }
-    public function getQuestions() {
-        return $this->questions;
-    }
-    public function getAnswers() {
-        return $this->answers;
+    public function getStatus() {
+        return $this->status;
     }
     public function getCreatedAt() {
         return $this->createdAt;
@@ -78,8 +74,7 @@ class FlashcardModel {
                 $row['id'],
                 $row['topic'],
                 $row['author'],
-                $row['question'],
-                $row['answer'],
+                $row['status'],
                 $row['created_at'],
                 $row['updated_at']
             );
@@ -88,7 +83,7 @@ class FlashcardModel {
         return $flashcards;
     }
     public function getByID($id){
-        $stmt = $this->pdo->prepare("SELECT * FROM flashcards WHERE id = :id");
+        $stmt =  $this->pdo->prepare("SELECT * FROM flashcards WHERE id = :id");
         $stmt->execute([':id' => $id]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         if($result){
@@ -96,13 +91,39 @@ class FlashcardModel {
                 $result['id'],
                 $result['topic'],
                 $result['author'],
-                $result['question'],
-                $result['answer'],
+                $result['status'],
                 $result['created_at'],
                 $result['updated_at']
             );
         }
         return null;
+    }
+    public function getLastInsertedId() {
+        return $this->pdo->lastInsertId();
+    }
+
+    public function create($topic, $author, $status) {
+        $stmt = $this->pdo->prepare("INSERT INTO flashcards (topic, author, status, created_at, updated_at) VALUES (:topic, :author, :status, NOW(), NOW())");
+        return $stmt->execute([
+            ':topic' => $topic,
+            ':author' => $author,
+            ':status' => $status,
+        ]);
+    }
+
+    public function update($id, $topic, $author, $status) {
+        $stmt = $this->pdo->prepare("UPDATE flashcards SET topic = :topic, author = :author, status = :status, updated_at = NOW() WHERE id = :id");
+        return $stmt->execute([
+            ':id' => $id,
+            ':topic' => $topic,
+            ':author' => $author,
+            ':status' => $status,
+        ]);
+    }
+
+    public function delete($id) {
+        $stmt = $this->pdo->prepare("DELETE FROM flashcards WHERE id = :id");
+        return $stmt->execute([':id' => $id]);
     }
 }
 ?>

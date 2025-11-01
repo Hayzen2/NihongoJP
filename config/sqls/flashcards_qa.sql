@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS flashcards_qa (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    flashcard_id INT UNSIGNED NOT NULL,
+    question TEXT NOT NULL,
+    answer TEXT NOT NULL,
+    FOREIGN KEY (flashcard_id) REFERENCES flashcards(id) ON DELETE CASCADE
+)  ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

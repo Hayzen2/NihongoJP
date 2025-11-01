@@ -1,3 +1,25 @@
+<?php require_once __DIR__ . '/flashcard-new.php'; ?>
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg">
+        <div class="modal-header bg-danger text-white">
+            <h5 class="modal-title fw-bold" id="deleteModalLabel">⚠️ Confirm Delete</h5>
+        </div>
+
+        <div class="modal-body text-center">
+            <p class="fs-5 mb-3">Are you sure you want to delete this flashcard?</p>
+            <p class="text-muted small">This action cannot be undone.</p>
+        </div>
+
+        <div class="modal-footer justify-content-center">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-danger" id="confirmDelete">Yes, Delete</button>
+        </div>
+        </div>
+  </div>
+</div>
+<!-- End Delete Confirmation Modal -->
 <div class="container mt-5 text-center">
     <h1 class="mb-4">Flashcards List </h1>
     <p class="mb-4">Your collection of Japanese flashcards!</p>
@@ -29,6 +51,7 @@
                     <tr>
                         <th scope="col">Topic</th>
                         <th scope="col">Author </th>
+                        <th scope="col">Privacy Status</th>
                         <th scope="col">Created At</th>
                         <th scope="col">Updated At</th>
                         <th scope="col">Actions</th>
@@ -37,14 +60,15 @@
                 <tbody>
                     <?php foreach($flashcards as $card): ?>
                         <tr>
-                            <td data-label="Topic"><?= $card->getTopic() ?></td>
-                            <td data-label="Author"><?= $card->getAuthor() ?></td>
+                            <td class="fw-bold" data-label="Topic"><?= $card->getTopic() ?></td>
+                            <td class="fw-bold" data-label="Author"><?= $card->getAuthor() ?></td>
+                            <td data-label="Status"><?= $card->getStatus() === 'public' ? '🌍 Public' : '🔒 Private' ?></td>
                             <td data-label="Created At"><?= date("d F Y", strtotime($card->getCreatedAt())) ?></td>
                             <td data-label="Updated At"><?= date("d F Y", strtotime($card->getUpdatedAt())) ?></td>
                             <td>
-                                <a href="/flashcards/show/<?= $card->getId() ?>" class="btn btn-info">View</a>
+                                <a href="/flashcards/view/<?= $card->getId() ?>" class="btn btn-info">View</a>
                                 <a href="/flashcards/edit/<?= $card->getId() ?>" class="btn btn-primary">Edit</a>
-                                <a href="/flashcards/delete/<?= $card->getId() ?>" class="btn btn-danger">Delete</a>
+                                <button type="button" class="btn btn-danger" onclick="openDeleteModal(<?=$card->getId()?>)">Delete</button>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -54,4 +78,5 @@
     </div>
 </div>
 
-<a href="/flashcards/new" class="btn-add-flashcard">＋</a>
+<!-- Use javascript:void(0) to execute JS without reloading or navigate to another page -->
+<a href="javascript:void(0)" class="btn-add-flashcard" id="openModal">＋</a> 
