@@ -11,17 +11,22 @@ function handleCredentialResponse(response) {
     });
 }
 let confirmPassword = $('#confirm_password');
+let requirements = $('.password-requirements li');
 let password = $('#password');
 let username = $('#username');
-let requirements = $('.password-requirements li');
+let email = $('#email');
 let isNotMatch = $('.is-invalid-not-match');
-let isExists = $('.is-invalid-exists');
+let error_username = $('.error-username');
+let error_email = $('.error-email');
+
 $(document).ready(() => {
     isNotMatch.hide();
     isExists.hide();
+    error_username.hide();
+    error_email.hide();
 })
 //check if the password contains necessary criteria
-password.on('input', function() {
+password.on('input', () => {
     const rules = [
         /.{8,}/, // at least 8 characters
         /[0-9]/, // at least 1 number
@@ -37,23 +42,12 @@ password.on('input', function() {
         }
     });
 });
-confirmPassword.on('input', function() {
+confirmPassword.on('input', () => {
     if (confirmPassword.val() === password.val()) {
         isNotMatch.hide();
     } else {
         isNotMatch.show();
     }
-});
-username.on('input', function() {
-    fetch(`/check-username?username=${encodeURIComponent(username.val())}`)
-    .then(response => response.json())
-    .then(data => {
-        if (data.exists) {
-            isExists.show();
-        } else {
-            isExists.hide();
-        }
-    });
 });
 
 let inputs = $('#otp-inputs input');
@@ -73,6 +67,39 @@ inputs.each((index, input) => {
             }
         }
     });
+});
+
+username.on('input', function() {
+    const value = $(this).val();
+    if (value.length < 3) { // basic min length check
+        $('.error-username').text("Username must be at least 3 characters").show();
+    } else {
+        $('.error-username').hide();
+        $.post("/check-username", { username: value }, function(res) {
+            if (res.exists) {
+                error_username.text(res.message).show();
+            } else {
+                error_username.hide();
+            }
+        }, 'json');
+    }
+});
+
+email.on('input', function() {
+    const value = $(this).val();
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // basic email format check
+    if (!emailPattern.test(value) && value.length > 0) {
+        error_email.text("Invalid email format").show();
+    } else{
+        error_email.hide();
+        $.post("/check-email", { email: value }, function(res) {
+            if (res.exists) {
+                error_email.text(res.message).show();
+            } else {
+                error_email.hide();
+            }
+        }, 'json');
+    }
 });
 /* Cookies have:
 PHPSESSID: to know if user is logged in

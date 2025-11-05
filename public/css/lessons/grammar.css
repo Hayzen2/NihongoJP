@@ -1,0 +1,80 @@
+body {
+    background: linear-gradient(135deg, #fff5f8, #fdf0ff);
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Segoe UI', sans-serif;
+    color: #222;
+}
+
+.main-title {
+    color: #d63384;
+    font-weight: 800;
+    font-size: 2.8rem;
+}
+
+
+/*Grammar General Page*/
+.lesson-title {
+    color: #b21e4b;          
+    background: #fff;       
+    font-weight: 600;
+    display: inline-block;
+    border: 2px solid #ffc2d4; 
+    border-radius: 20px;
+    margin-bottom: 20px;
+}
+
+.grammar-card {
+    background: #fffdfa;
+    border: 1px solid #f4d4df;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(255, 182, 193, 0.15);
+}
+
+.grammar-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    background: #fff0f5;
+    border-color: #ffaccf;
+    box-shadow: 0 8px 18px rgba(255, 105, 180, 0.2);
+}
+
+.grammar-symbol {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #ff6f91;
+    text-shadow: 1px 1px 1px rgba(255, 105, 135, 0.15);
+}
+
+.lesson-group {
+    border-bottom: 1px dashed #ffd6e7;
+    padding-bottom: 20px;
+}
+
+/* Grammar Detail Page */
+.grammar-detail {
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(214, 51, 132, 0.15);
+}
+
+.warning-box {
+    background: #ffdde2;
+    border: 2px solid #ff4d6d;
+    color: #b3003c;
+    border-radius: 10px;
+}
+.example-item {
+    background: #fff7fb;
+    border: none;
+    border-radius: 10px;
+}
+a.btn-outline-secondary {
+    border-color: #d63384;
+    color: #d63384;
+}
+a.btn-outline-secondary:hover {
+    background: #d63384;
+    color: white;
+}

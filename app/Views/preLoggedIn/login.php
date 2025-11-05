@@ -1,12 +1,11 @@
 <div class="container py-5">
   <div class="row justify-content-center align-items-center">
-
     <div class="col-md-6 order-2 order-md-1">
       <div class="card p-4 mx-auto" style="max-width: 600px;">
         <h2 class="text-center mb-4 signup-title">🌸 Login 🌸</h2>
 
         <?php if (isset($error)): ?>
-          <div class="alert alert-danger text-center"><?php echo $error; ?></div>
+          <div class="alert-login alert-danger text-center"><?=$error?></div>
         <?php endif; ?>
 
         <form method="POST" action="/login/local">

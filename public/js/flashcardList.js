@@ -14,10 +14,10 @@ $('.btn-new-question').on('click', function() {
     input.html(`
        <div class="qa-item mb-4 p-3 rounded shadow-sm">
             <label for ="question" class="form-label">Question #${questionNumber}</label>
-            <textarea class="form-control mb-2" rows="3" name="questions[]" placeholder="Enter question" required></textarea>
+            <textarea id="question" class="form-control mb-2" rows="3" name="questions[]" placeholder="Enter question" required></textarea>
 
             <label for ="answer" class="form-label">Answer #${questionNumber}</label>
-            <textarea class="form-control mb-2" rows="3" name="answers[]" placeholder="Enter answer" required></textarea>
+            <textarea id="answer" class="form-control mb-2" rows="3" name="answers[]" placeholder="Enter answer" required></textarea>
 
             <button type="button" class="btn btn-delete-qa">Delete</button>
         </div>

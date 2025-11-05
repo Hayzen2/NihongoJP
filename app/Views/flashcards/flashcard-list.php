@@ -23,60 +23,107 @@
 <div class="container mt-5 text-center">
     <h1 class="mb-4">Flashcards List </h1>
     <p class="mb-4">Your collection of Japanese flashcards!</p>
-    
-    <div class="flashcard-list-container">
-         <!-- Controls -->
-        <form method="get" class="controls d-flex justify-content-center align-items-center flex-wrap gap-3 mb-4">
-            <label for="search" class="fw-bold">Search:</label>
-            <input type="text" name="search" placeholder="Find by topic or author..." value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
-            
-            <label for="sort" class="fw-bold">Sort By:</label>
-            <select name="sort">
-                <option value="topic" <?= ($_GET['sort'] ?? '') === 'topic' ? 'selected' : '' ?>>Topic</option>
-                <option value="created" <?= ($_GET['sort'] ?? '') === 'created' ? 'selected' : '' ?>>Created Date</option>
-                <option value="updated" <?= ($_GET['sort'] ?? '') === 'updated' ? 'selected' : '' ?>>Updated Date</option>
-            </select>
+    <!-- Private Flashcards -->
+    <h2 class="mb-4 private-title">🔒 Private Flashcards</h2>
+    <form method="GET" class="controls private-controls d-flex justify-content-center align-items-center flex-wrap gap-3 mb-4">
+        <label for="private_search" class="fw-bold">Search:</label>
+        <input type="text" name="private_search" id="private_search" placeholder="Search by topic..." value="<?= htmlspecialchars($privateSearch) ?>">
+        
+        <label for="private_sort" class="fw-bold">Sort By:</label>
+        <select name="private_sort">
+            <option value="created_at" <?= $privateSort==='created_at'?'selected':'' ?>>Created Date</option>
+            <option value="updated_at" <?= $privateSort==='updated_at'?'selected':'' ?>>Updated Date</option>
+        </select>
+        
+        <label for="private_order" class="fw-bold">Order By:</label>
+        <select name="private_order">
+            <option value="asc" <?= $privateOrder==='asc'?'selected':'' ?>>Ascending</option>
+            <option value="desc" <?= $privateOrder==='desc'?'selected':'' ?>>Descending</option>
+        </select>
+    </form>
 
-            <label for="order" class="fw-bold">Sort Order:</label>
-            <select name="order">
-                <option value="asc" <?= ($_GET['order'] ?? '') === 'asc' ? 'selected' : '' ?>>Ascending</option>
-                <option value="desc" <?= ($_GET['order'] ?? '') === 'desc' ? 'selected' : '' ?>>Descending</option>
-            </select>
-        </form>
+    <div class="flashcard-table mb-3 d-flex justify-content-center align-items-center flex-column">
+        <table class="table table-bordered mb-5" id="private-table">
+            <thead>
+                <tr>
+                    <th>Topic</th>
+                    <th>Created At</th>
+                    <th>Updated At</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($privateFlashcards as $card): ?>
+                <tr>
+                    <td><?= is_array($card) ? $card['topic'] : $card->getTopic(); ?></td>
+                    <td><?= is_array($card) ? date('d F Y', strtotime($card['created_at'])) : date('d F Y', strtotime($card->getCreatedAt())); ?></td>
+                    <td><?= is_array($card) ? date('d F Y', strtotime($card['updated_at'])) : date('d F Y', strtotime($card->getUpdatedAt())); ?></td>
+                    <td>
+                        <a href="/flashcards/view/<?= is_array($card) ? $card['id'] : $card->getId(); ?>" class="btn btn-info btn-sm">View</a>
+                        <a href="/flashcards/edit/<?= is_array($card) ? $card['id'] : $card->getId(); ?>" class="btn btn-primary btn-sm">Edit</a>
+                        <button onclick="openDeleteModal(<?= is_array($card) ? $card['id'] : $card->getId(); ?>)" class="btn btn-danger btn-sm">Delete</button>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
 
-        <!-- Flashcards List -->
-        <div class="flashcard-list mb-3 d-flex justify-content-center align-items-center flex-column">
-            <table class="table shadow-sm rounded">
-                <thead>
-                    <tr>
-                        <th scope="col">Topic</th>
-                        <th scope="col">Author </th>
-                        <th scope="col">Privacy Status</th>
-                        <th scope="col">Created At</th>
-                        <th scope="col">Updated At</th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach($flashcards as $card): ?>
-                        <tr>
-                            <td class="fw-bold" data-label="Topic"><?= $card->getTopic() ?></td>
-                            <td class="fw-bold" data-label="Author"><?= $card->getUsernameByUserId($card->getUserId()) ?></td>
-                            <td data-label="Status"><?= $card->getStatus() === 'public' ? '🌍 Public' : '🔒 Private' ?></td>
-                            <td data-label="Created At"><?= date("d F Y", strtotime($card->getCreatedAt())) ?></td>
-                            <td data-label="Updated At"><?= date("d F Y", strtotime($card->getUpdatedAt())) ?></td>
-                            <td>
-                                <a href="/flashcards/view/<?= $card->getId() ?>" class="btn btn-info">View</a>
-                                <a href="/flashcards/edit/<?= $card->getId() ?>" class="btn btn-primary">Edit</a>
-                                <button type="button" class="btn btn-danger" onclick="openDeleteModal(<?=$card->getId()?>)">Delete</button>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
+    <!-- Public Flashcards -->
+    <h2 class="mb-4 public-title">🌍 Public Flashcards</h2>
+    <form method="GET" class="controls public-controls d-flex justify-content-center align-items-center flex-wrap gap-3 mb-4">
+        <label for="public_search" class="fw-bold">Search:</label>
+        <input type="text" name="public_search" placeholder="Search by topic or author..." value="<?= htmlspecialchars($publicSearch) ?>">
+        <label for="public_sort" class="fw-bold">Sort By:</label>
+        <select name="public_sort">
+            <option value="topic" <?= $publicSort==='topic'?'selected':'' ?>>Topic</option>
+            <option value="created_at" <?= $publicSort==='created_at'?'selected':'' ?>>Created Date</option>
+            <option value="updated_at" <?= $publicSort==='updated_at'?'selected':'' ?>>Updated Date</option>
+        </select>
+        <label for="public_order" class="fw-bold">Order By:</label>
+        <select name="public_order">
+            <option value="asc" <?= $publicOrder==='asc'?'selected':'' ?>>Ascending</option>
+            <option value="desc" <?= $publicOrder==='desc'?'selected':'' ?>>Descending</option>
+        </select>
+    </form>
+
+    <div class="flashcard-table mb-3 d-flex justify-content-center align-items-center flex-column">
+        <table class="table table-bordered" id="public-table">
+            <thead>
+                <tr>
+                    <th>Topic</th>
+                    <th>Author</th>
+                    <th>Created At</th>
+                    <th>Updated At</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($publicFlashcards as $card): ?>
+                <tr>
+                    <td><?= is_array($card) ? $card['topic'] : $card->getTopic() ?></td>
+                    <td>
+                        <?php if (is_array($card)): ?>
+                            <?= $card['author'] ?>
+                        <?php else: ?>
+                            <?= $card->getUsernameByUserId($card->getUserId()) ?? $card->getNameByUserId($card->getUserId()) ?>
+                        <?php endif; ?>
+                    </td>
+
+                    <td><?= is_array($card) ? date('d F Y', strtotime($card['created_at'])) : date('d F Y', strtotime($card->getCreatedAt())) ?></td>
+                    <td><?= is_array($card) ? date('d F Y', strtotime($card['updated_at'])) : date('d F Y', strtotime($card->getUpdatedAt())) ?></td>
+
+                    <td>
+                        <?php $id = is_array($card) ? $card['id'] : $card->getId(); ?>
+                        <a href="/flashcards/view/<?= $id ?>" class="btn btn-info btn-sm">View</a>
+                        <a href="/flashcards/edit/<?= $id ?>" class="btn btn-primary btn-sm">Edit</a>
+                        <button onclick="openDeleteModal(<?= $id ?>)" class="btn btn-danger btn-sm">Delete</button>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
     </div>
 </div>
-
 <!-- Use javascript:void(0) to execute JS without reloading or navigate to another page -->
-<a href="javascript:void(0)" class="btn-add-flashcard" id="openModal">＋</a> 
+<a href="javascript:void(0)" class="btn-create-flashcard" id="openModal">＋</a>

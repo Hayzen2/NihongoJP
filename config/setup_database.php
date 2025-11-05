@@ -29,7 +29,8 @@
         $sqlFiles = [
             __DIR__ . '/sqls/users.sql',
             __DIR__ . '/sqls/flashcards.sql',
-            __DIR__ . '/sqls/flashcards_qa.sql'
+            __DIR__ . '/sqls/flashcards_qa.sql',
+            __DIR__ . '/sqls/books.sql'
         ];
         foreach($sqlFiles as $sqlFile){
             $pdo->exec(file_get_contents($sqlFile));

@@ -46,6 +46,17 @@ class UserModel {
             return $pdo;
         })();
     }
+    public function getId() { return $this->id; }
+    public function getEmail() { return $this->email; }
+    public function getName() { return $this->name; }
+    public function getUsername() { return $this->username; }
+    public function getCountry() { return $this->country; }
+    public function getProvince() { return $this->province; }
+    public function getCity() { return $this->city; }
+    public function getPasswordHash() { return $this->passwordHash; }
+    public function getAuthProvider() { return $this->authProvider; }
+    public function getCreatedAt() { return $this->createdAt; }
+    
     public function getUserByUsername($username) {
         $stmt = $this->pdo->prepare("SELECT * FROM users WHERE username = :username");
         $stmt->execute([':username' => $username]);

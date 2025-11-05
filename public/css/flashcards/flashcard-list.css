@@ -1,187 +1,183 @@
 html, body {
-    background: linear-gradient(135deg, #ffeaf2, #fce1ec, #fff5f9);
-    background-attachment: fixed;
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
+  background: linear-gradient(135deg, #ffeaf2, #fce1ec, #fff5f9);
+  background-attachment: fixed;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 .container h1 {
-    font-weight: 700;
-    color: #b83b5e;    
-    text-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    animation: fadeSlideDown 0.6s ease-out;
-
+  font-weight: 700;
+  color: #b83b5e;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  animation: fadeSlideDown 0.6s ease-out;
 }
-
 .container p {
-    color: #666;
-    font-size: 1.1rem;
-    animation: fadeSlideUp 0.6s ease-out;
+  color: #666;
+  font-size: 1.1rem;
+  animation: fadeSlideUp 0.6s ease-out;
+} 
+.container h2 {
+  font-weight: 600;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  animation: fadeSlideDown 0.6s ease-out;
+}
+.container h2.public-title {
+  color: #1dd1a1;
+  text-shadow: 0 2px 8px rgba(29, 209, 161, 0.3);
 }
 
-/* Flashcard List */
-.flashcard-list-container {
-    max-width: 2400px;       
-    width: 90%;             
-    margin: 0 auto;        
-    padding: 0 15px;        
-    box-sizing: border-box; 
+.container h2.private-title {
+  color: #d6336c; 
+  text-shadow: 0 2px 8px rgba(214, 51, 108, 0.3);
 }
 
-.flashcard-list table {
-    border: 2px solid #ffb6c1;
-    --bs-table-bg: #fff !important; 
-    border-radius: 16px;
-    overflow: hidden;
-    animation: fadeSlideIn 0.6s ease forwards;
-    box-shadow: 0 6px 20px rgba(255, 182, 193, 0.25);
-    border-collapse: separate; /* allows border-radius */
-    border-spacing: 0;
-    transition: transform 0.2s;
-}
 
-.flashcard-list table thead {
-    position: relative;
-    color: #fff;
+/* Flashcard Table */
+.flashcard-table-container {
+  max-width: 2400px;
+  width: 90%;
+  margin: 0 auto;
+  padding: 0 15px;
+  box-sizing: border-box;
 }
-
-.flashcard-list table tbody tr:nth-child(odd) > td {
-    background-color: #fff3f7 !important;
+.flashcard-table table {
+  border: 2px solid #ffb6c1;
+  --bs-table-bg: #fff !important;
+  border-radius: 16px;
+  overflow: hidden;
+  animation: fadeSlideIn 0.6s ease forwards;
+  box-shadow: 0 6px 20px rgba(255, 182, 193, 0.25);
+  border-collapse: separate;
+  border-spacing: 0;
+  transition: transform 0.2s;
 }
-.flashcard-list table tbody tr:nth-child(even) > td {
+.flashcard-table table thead {
+  position: relative;
+  color: #fff;
+}
+.flashcard-table table tbody tr:nth-child(odd) > td {
+  background-color: #fff3f7 !important;
+}
+.flashcard-table table tbody tr:nth-child(even) > td {
   background-color: #ffffff !important;
 }
-
-.flashcard-list table tbody tr:hover {
-    transform: scale(1.03) translateY(-2px);
-    box-shadow: 0 10px 25px rgba(255, 182, 193, 0.6),
-                0 0 20px rgba(215, 143, 255, 0.5);
-    cursor: pointer;
+.flashcard-table table tbody tr:hover {
+  transform: scale(1.03) translateY(-2px);
+  box-shadow: 0 10px 25px rgba(255, 182, 193, 0.6),
+              0 0 20px rgba(215, 143, 255, 0.5);
+  cursor: pointer;
 }
-
-.flashcard-list table thead::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #f3819d, #b83b5e, #2e2e2e);
-    z-index: 0;
+.flashcard-table table thead::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #f3819d, #b83b5e, #2e2e2e);
+  z-index: 0;
 }
-.flashcard-list table thead th {
-    background: transparent !important; /* remove default background */
-    position: relative;
-    z-index: 1; /* text stays above gradient */
-    color: #fff;
+.flashcard-table table thead th {
+  background: transparent !important;
+  position: relative;
+  z-index: 1;
+  color: #fff;
 }
-
 /* Buttons */
-.flashcard-list table tbody .btn {
-    font-weight: bold;
-    border-radius: 50px;
-    padding: 4px 12px;
-    text-transform: capitalize;
+.flashcard-table table tbody .btn {
+  font-weight: bold;
+  border-radius: 50px;
+  padding: 4px 12px;
+  text-transform: capitalize;
 }
-
 /* View button */
-.flashcard-list .btn-info {
-    background: #6cc3a0;
-    color: #fff;
+.flashcard-table .btn-info {
+  background: #6cc3a0;
+  color: #fff;
 }
-.flashcard-list .btn-info:hover {
-    transform: scale(1.05);
-    background: #57a887;
-    box-shadow: 0 4px 12px rgba(129,199,132,0.5);
+.flashcard-table .btn-info:hover {
+  transform: scale(1.05);
+  background: #57a887;
+  box-shadow: 0 4px 12px rgba(129,199,132,0.5);
 }
-
 /* Edit button */
-.flashcard-list .btn-primary {
-    background: #7aa9f7;
-    color: #fff;
+.flashcard-table .btn-primary {
+  background: #7aa9f7;
+  color: #fff;
 }
-.flashcard-list .btn-primary:hover {
-    transform: scale(1.05);
-    background: #5c8ed9;
-    box-shadow: 0 4px 12px rgba(100,181,246,0.5);
+.flashcard-table .btn-primary:hover {
+  transform: scale(1.05);
+  background: #5c8ed9;
+  box-shadow: 0 4px 12px rgba(100,181,246,0.5);
 }
-
 /* Delete button */
-.flashcard-list .btn-danger {
+.flashcard-table .btn-danger {
     background: #f77c85;
     color: #fff;
 }
-.flashcard-list .btn-danger:hover {
-    background: #e25a66;
-    box-shadow: 0 4px 12px rgba(229,57,53,0.5);
-    transform: scale(1.05);
+.flashcard-table .btn-danger:hover {
+  background: #e25a66;
+  box-shadow: 0 4px 12px rgba(229,57,53,0.5);
+  transform: scale(1.05);
 }
-
-
-.btn-add-flashcard{
-    position: fixed;
-    top: 50%;
-    left: 25px;
-    transform: translateY(-50%); /* Center vertically */
-    background: linear-gradient(135deg, #ff6fa5, #ff3e78);
-    color: #fff;
-    border-radius: 50%;
-    width: 70px;
-    height: 70px;
-    font-size: 2.2rem;
-    font-weight: bold;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-decoration: none;
-    box-shadow: 0 8px 20px rgba(255, 51, 102, 0.4);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    animation: pulse-glow 1.5s infinite;
-    z-index: 999;
+.btn-create-flashcard{
+  position: fixed;
+  top: 50%;
+  left: 25px;
+  transform: translateY(-50%);
+  background: linear-gradient(135deg, #ff6fa5, #ff3e78);
+  color: #fff;
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  font-size: 2.2rem;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  box-shadow: 0 8px 20px rgba(255, 51, 102, 0.4);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: pulse-glow 1.5s infinite;
+  z-index: 999;
 }
-
 /* Button subtle pulse */
 @keyframes pulse-glow {
-    0% {
-        box-shadow: 0 0 0 0 rgba(255, 62, 120, 0.6);
-    }
-    70% {
-        box-shadow: 0 0 0 20px rgba(255, 62, 120, 0);
-    }
-    100% {
-        box-shadow: 0 0 0 0 rgba(255, 62, 120, 0);
-    }
+  0% {
+      box-shadow: 0 0 0 0 rgba(255, 62, 120, 0.6);
+  }
+  70% {
+      box-shadow: 0 0 0 20px rgba(255, 62, 120, 0);
+  }
+  100% {
+      box-shadow: 0 0 0 0 rgba(255, 62, 120, 0);
+  }
 }
-
-.btn-add-flashcard:hover {
-    transform: scale(1.1);
-    box-shadow: 0 10px 25px rgba(243,129,157,0.5);
+.btn-create-flashcard:hover {
+  transform: scale(1.1);
+  box-shadow: 0 10px 25px rgba(243,129,157,0.5);
 }
-
 .controls label {
-    color: #d6336c;
-    margin-bottom: 3px;
-    font-weight: bold;
+  color: #d6336c;
+  margin-bottom: 3px;
+  font-weight: bold;
 }
-
 .controls {
-    animation: fadeSlideUp 0.7s ease-out;
+  animation: fadeSlideUp 0.7s ease-out;
 }
-.controls input[type="text"], 
+.controls input[type="text"],
 .controls select {
-    border: 2px solid #d6336c;
-    border-radius: 8px;
-    padding: 6px 10px;
-    outline: none;
+  border: 2px solid #d6336c;
+  border-radius: 8px;
+  padding: 6px 10px;
+  outline: none;
 }
-
-
 .controls input[type="text"]:focus,
 .controls select:focus {
-    border-color: #ff3366;
-    box-shadow: 0 0 8px rgba(255,51,102,0.5);
+  border-color: #ff3366;
+  box-shadow: 0 0 8px rgba(255,51,102,0.5);
 }
-
 /* Modal Customization */
 .modal-content {
   border-radius: 18px;
@@ -189,7 +185,6 @@ html, body {
   box-shadow: 0 10px 25px rgba(255, 105, 180, 0.3);
   background: linear-gradient(180deg, #fff9fb, #ffe6ef);
 }
-
 .modal-header {
   background: linear-gradient(135deg, #ff6fa5, #f3819d, #b83b5e);
   color: #fff;
@@ -197,19 +192,16 @@ html, body {
   border-top-right-radius: 18px;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
-
 .modal-body {
   color: #5a2a3e;
   font-weight: 500;
   background: transparent;
 }
-
 .modal-footer .btn {
   font-weight: bold;
   border-radius: 10px;
   transition: all 0.25s ease;
 }
-
 /* Cancel Button */
 .modal-footer .btn-secondary {
   background: #ffe5ee;
@@ -221,7 +213,6 @@ html, body {
   color: #9e3551;
   transform: scale(1.05);
 }
-
 /* Confirm Delete Button */
 .modal-footer .btn-danger {
   background: linear-gradient(135deg, #ff6fa5, #ff3e78);
@@ -233,7 +224,6 @@ html, body {
   transform: scale(1.08);
   box-shadow: 0 6px 18px rgba(255, 62, 120, 0.6);
 }
-
 /* Table Animation */
 @keyframes fadeSlideIn {
   0% {
@@ -249,24 +239,19 @@ html, body {
     transform: translateY(0);
   }
 }
-
-.flashcard-list tbody tr {
+.flashcard-table tbody tr {
   opacity: 0;
   animation: fadeSlideIn 0.6s ease forwards;
 }
-
-/* Delay each row slightly */
-.flashcard-list tbody tr:nth-child(1) { animation-delay: 0.1s; }
-.flashcard-list tbody tr:nth-child(2) { animation-delay: 0.2s; }
-.flashcard-list tbody tr:nth-child(3) { animation-delay: 0.3s; }
-.flashcard-list tbody tr:nth-child(4) { animation-delay: 0.4s; }
-.flashcard-list tbody tr:nth-child(5) { animation-delay: 0.5s; }
-
+.flashcard-table tbody tr:nth-child(1) { animation-delay: 0.1s; }
+.flashcard-table tbody tr:nth-child(2) { animation-delay: 0.2s; }
+.flashcard-table tbody tr:nth-child(3) { animation-delay: 0.3s; }
+.flashcard-table tbody tr:nth-child(4) { animation-delay: 0.4s; }
+.flashcard-table tbody tr:nth-child(5) { animation-delay: 0.5s; }
 @keyframes fadeSlideDown {
   0% { opacity: 0; transform: translateY(-10px); }
   100% { opacity: 1; transform: translateY(0); }
 }
-
 @keyframes fadeSlideUp {
   0% { opacity: 0; transform: translateY(10px); }
   100% { opacity: 1; transform: translateY(0); }

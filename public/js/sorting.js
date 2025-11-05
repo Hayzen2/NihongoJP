@@ -1,55 +1,62 @@
 $('.controls').on('submit', e => {
     e.preventDefault(); // stop Enter from reloading page
 });
-const searchInput = $('input[name="search"]');
-const sortSelect = $('select[name="sort"]');
-const orderSelect = $('select[name="order"]');
-const flashcardBody = $('.flashcard-list tbody');
+function setupFlashcardFilter(type) {
+    const searchInput = $(`.${type}-controls input[name="${type}_search"]`);
+    const sortSelect = $(`.${type}-controls select[name="${type}_sort"]`);
+    const orderSelect = $(`.${type}-controls select[name="${type}_order"]`);
+    const tableBody = $(`#${type}-table tbody`);
 
-function renderFlashcards(flashcards) {
-    const rows = flashcards.map(flashcard => `
-        <tr>
-            <td class="fw-bold" data-label="Topic">${flashcard.topic}</td>
-            <td class="fw-bold" data-label="Author">${flashcard.author}</td>
-            <td data-label="Status">${flashcard.status === 'public' ? '🌍 Public' : '🔒 Private'}</td>
-            <td data-label="Created At">${formatDate(flashcard.created_at)}</td>
-            <td data-label="Updated At">${formatDate(flashcard.updated_at)}</td>
-            <td>
-                <a href="/flashcards/view/${flashcard.id}" class="btn btn-info">View</a>
-                <a href="/flashcards/edit/${flashcard.id}" class="btn btn-primary">Edit</a>
-                <button type="button" class="btn btn-danger" onclick="openDeleteModal(${flashcard.id})">Delete</button>
-            </td>
-        </tr>
-    `).join('');
-    flashcardBody.html(rows);
-}
-function fetchFlashcards() {
-    const search = searchInput.val().trim();
-    const sort = sortSelect.val();
-    const order = orderSelect.val();
+    function renderRows(data) {
+        const rows = data.map(card => `
+            <tr>
+                <td>${card.topic}</td>
+                ${type === 'public' ? `<td>${card.author || ''}</td>` : ''}
+                <td>${formatDate(card.created_at)}</td>
+                <td>${formatDate(card.updated_at)}</td>
+                <td>
+                    <a href="/flashcards/view/${card.id}" class="btn btn-info btn-sm">View</a>
+                    <a href="/flashcards/edit/${card.id}" class="btn btn-primary btn-sm">Edit</a>
+                    <button onclick="openDeleteModal(${card.id})" class="btn btn-danger btn-sm">Delete</button>
+                </td>
+            </tr>
+        `).join('');
+        tableBody.html(rows);
+    }
 
-    const params = new URLSearchParams({ search, sort, order });
-    // Update URL without reloading the page
-    history.replaceState(null, '', `/flashcards?${params.toString()}`);
+    function fetchFlashcards() {
+        const params = new URLSearchParams({
+            type: type,
+            [`${type}_search`]: searchInput.val(),
+            [`${type}_sort`]: sortSelect.val(),
+            [`${type}_order`]: orderSelect.val()
+        });
 
-    fetch(`/flashcards?${params.toString()}&ajax=1`, {
-        headers: { 'Accept': 'application/json' }
+        // Update URL without reloading the page
+        history.replaceState(null, '', `/flashcards?${params.toString()}`);
+
+        fetch(`/flashcards?${params.toString()}&ajax=1`, {
+            headers: { 'Accept': 'application/json' }
         })
-        .then(response => response.json())
-        .then(data => renderFlashcards(data))
-        .catch(error => {
-            console.error('Error fetching flashcards:', error);
-        }
-    );
-} 
+        .then(res => res.json())
+        .then(data => {
+            if (type === 'private') renderRows(data.privateFlashcards || []);
+            if (type === 'public') renderRows(data.publicFlashcards || []);
+        })
+        .catch(err => console.error(err));
+    }
+
+    searchInput.on('input', fetchFlashcards);
+    sortSelect.on('change', fetchFlashcards);
+    orderSelect.on('change', fetchFlashcards);
+
+    fetchFlashcards(); // fetch immidiately
+}
 
 function formatDate(dateString) {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
 }
 
-searchInput.on('input', fetchFlashcards);
-sortSelect.on('change', fetchFlashcards);
-orderSelect.on('change', fetchFlashcards);
-
-fetchFlashcards();
+setupFlashcardFilter('private');
+setupFlashcardFilter('public');

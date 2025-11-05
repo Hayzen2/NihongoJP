@@ -14,6 +14,7 @@ use App\Controllers\UserController;
 use App\Controllers\FlashcardController;
 use App\Controllers\SubscriptionController;
 use App\Controllers\ContactController;
+use App\Controllers\BookController;
 use Dotenv\Dotenv; // Load environment variables like GOOGLE_CLIENT_ID
 
 $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
@@ -48,8 +49,14 @@ $routes = [
     '/login/forgot-password/reset-password-form' => [AuthController::class, 'showResetPasswordForm'],
     '/login/forgot-password/reset-password' => [AuthController::class, 'resetPassword'],
     '/login/forgot-password/reset-expired' => [AuthController::class, 'showExpiredTokenOrOTPPage'],
+    '/check-username' => [AuthController::class, 'checkUsernameAvailability'],
+    '/check-email' => [AuthController::class, 'checkEmailAvailability'],
     '/lessons'      => [LessonController::class, 'showLessonChoices'],
-    '/buy-books'    => [BookController::class, 'showBuyBooks'],
+    '/lessons/:level/kanji'      => [LessonController::class, 'showLessonsByLevelKanji'],
+    '/lessons/:level/vocabulary'      => [LessonController::class, 'showLessonsByLevelVocabulary'],
+    '/lessons/:level/grammar'      => [LessonController::class, 'showLessonsByLevelGrammar'],
+    '/lessons/:level/grammar/:title'      => [LessonController::class, 'showLessonsContentByTitleGrammar'],
+    '/buy-books'    => [BookController::class, 'showBooks'],
     '/quizzes'      => [QuizController::class, 'showQuizLists'],
     '/rank'         => [RankController::class, 'showRankLists'],
     '/profile'      => [UserController::class, 'showProfile'],
@@ -73,7 +80,7 @@ $publicRoutes = ['/login', '/register',
                 '/api/cities/:provinceId', '/login/forgot-password/send-otp',
                 '/login/forgot-password/input-otp',
                 '/login/forgot-password/verify-otp', '/login/forgot-password/reset-password-form',
-                '/login/forgot-password/reset-expired'];
+                '/login/forgot-password/reset-expired', '/check-username', '/check-email'];
 
 $isPublic = false;
 foreach ($publicRoutes as $route) {
@@ -92,7 +99,7 @@ if (!isset($_SESSION['user']) && !$isPublic) {
 }
 foreach ($routes as $path => [$controllerClass, $method]) {
     // Convert /flashcards/view/:id → regex with capture group
-    $pattern = preg_replace('#:[^/]+#', '(\d+)', $path);
+    $pattern = preg_replace('#:[^/]+#', '([^/]+)', $path);
     $pattern = "#^" . $pattern . "$#";
 
     if (preg_match($pattern, $uri, $matches)) {

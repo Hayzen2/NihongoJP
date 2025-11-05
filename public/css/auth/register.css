@@ -83,11 +83,13 @@ body{
   color: #00cc66;
 }
 
-.is-invalid-not-match {
+.is-invalid-not-match, .error-username, .error-email {
   color: #e60073;
   transition: color 0.3s ease;
 }
-.is-invalid-not-match::before {
+.is-invalid-not-match:not(:empty)::before,
+.error-username:not(:empty)::before,
+.error-email:not(:empty)::before {
   content: "❌ ";
   color: #ff3366;
   font-weight: bold;

@@ -10,37 +10,62 @@
             $this->flashcardQAModel = new FlashcardQAModel();
         }
         public function showFlashcardList() {
-            
-            $search = $_GET['search'] ?? '';
-            $sort = $_GET['sort'] ?? 'created_at';
-            $order = $_GET['order'] ?? 'desc';
-            $status = $_GET['status'] ?? 'public';
-            $flashcards = $this->flashcardModel->getBySorting($search, $sort, $order, $status);
+            //Private search, sort, and order parameters
+            $privateSearch = $_GET['private_search'] ?? '';
+            $privateSort = $_GET['private_sort'] ?? 'created_at';
+            $privateOrder = $_GET['private_order'] ?? 'desc';
 
+            //Public search, sort, and order parameters
+            $publicSearch = $_GET['public_search'] ?? '';
+            $publicSort = $_GET['public_sort'] ?? 'topic';
+            $publicOrder = $_GET['public_order'] ?? 'asc';
+
+            //Query separately
+            $privateFlashcards = $this->flashcardModel->getBySortingPrivate($privateSearch, $privateSort, $privateOrder, $_SESSION['user']['id']);
+            $publicFlashcards = $this->flashcardModel->getBySortingPublic($publicSearch, $publicSort, $publicOrder);
+
+            //definition: ajax is a request made to fetch data without reloading the page
             if (isset($_GET['ajax'])) {
-                $data = [];
-                foreach ($flashcards as $card) {
-                    $data [] = [
-                       'id' => $card->getId(),
-                       'topic' => $card->getTopic(),
-                       'author' => $card->getUsernameByUserId($card->getUserId()),
-                        'status' => $card->getStatus(),
-                       'created_at' => $card->getCreatedAt(),
-                       'updated_at' => $card->getUpdatedAt(),
-                    ];
-                }
                 header('Content-Type: application/json');
+                $type = $_GET['type'] ?? 'private';
+                $data = [];
+
+                if ($type === 'private') {
+                    foreach ($privateFlashcards as $card) {
+                        $data['privateFlashcards'][] = [
+                            'id' => $card->getId(),
+                            'topic' => $card->getTopic(),
+                            'created_at' => $card->getCreatedAt(),
+                            'updated_at' => $card->getUpdatedAt(),
+                        ];
+                    }
+                }
+                if($type === 'public') {
+                    foreach ($publicFlashcards as $card) {
+                        $data['publicFlashcards'][] = [
+                            'id' => $card->getId(),
+                            'topic' => $card->getTopic(),
+                            'author' => $card->getUsernameByUserId($card->getUserId())
+                            ?? $card->getNameByUserId($card->getUserId()),
+                            'created_at' => $card->getCreatedAt(),
+                            'updated_at' => $card->getUpdatedAt(),
+                        ];
+                    }
+                }
                 echo json_encode($data);
                 exit; // Stop further execution
             }
-            render('flashcards/flashcard-list',[
-                'flashcards' => $flashcards,
-                'styles' => ['flashcards/flashcard-list', 'flashcards/flashcard-form'],
-                'scripts' => ['sorting', 'flashcardList'],
-                'search' => $search,
-                'sort' => $sort,
-                'order' => $order,
-                'status' => $status
+            render('flashcards/flashcard-list', [
+                'privateFlashcards' => $privateFlashcards,
+                'publicFlashcards'  => $publicFlashcards,
+                'privateSearch' => $privateSearch,
+                'publicSearch'  => $publicSearch,
+                'privateSort'   => $privateSort,
+                'publicSort'    => $publicSort,
+                'privateOrder'  => $privateOrder,
+                'publicOrder'   => $publicOrder,
+                'styles'  => ['flashcards/flashcard-list'],
+                'scripts' => ['flashcardList', 'sorting']
             ]);
             
         }

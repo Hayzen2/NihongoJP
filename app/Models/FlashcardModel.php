@@ -3,7 +3,6 @@ namespace App\Models;
 use PDO;
 class FlashcardModel {
     private $pdo;
-
     private $id;
     private $topic;
     private $user_id;
@@ -54,28 +53,39 @@ class FlashcardModel {
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result['username'];
     }
-    public function getBySorting($search='', $sort='', $order='') {
+    public function getNameByUserId($user_id) {
+        $stmt = $this->pdo->prepare("SELECT name FROM users WHERE id = :user_id");
+        $stmt->execute([':user_id' => $user_id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['name'];
+    }
+
+    public function getBySortingPrivate($search='', $sort='', $order='') {
         $orders = strtoupper($order) === 'ASC' ? 'ASC' : 'DESC';
         $sorts = in_array($sort, ['topic', 'created_at', 'updated_at']) ? $sort : 'created_at';
-
         //Base query
         $sql = "SELECT f.*, u.name AS author_name
             FROM flashcards f
             JOIN users u ON f.user_id = u.id ";
         $params = [];
+        $conditions = []; //Store conditions for WHERE
 
-        //search by topic
-        if ($search) {
-            $sql .= "WHERE f.topic LIKE :search OR u.name LIKE :search";
+        if ($search) { //private search only by topic
+            $conditions[] = "f.topic LIKE :search";
             $params[':search'] = "%$search%";
         }
 
+        $conditions[] = "status = 'private'";
+
+        if (!empty($conditions)) {
+            $sql .= " WHERE " . implode(" AND ", $conditions);
+        }
+
         $sql .= " ORDER BY $sorts $orders";
+
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
-
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
         $flashcards = [];
         foreach ($results as $row) {
             $flashcards[] = new FlashcardModel(
@@ -87,9 +97,52 @@ class FlashcardModel {
                 $row['updated_at']
             );
         }
-
         return $flashcards;
     }
+    
+
+    public function getBySortingPublic($search='', $sort='', $order='') {
+        $orders = strtoupper($order) === 'ASC' ? 'ASC' : 'DESC';
+        $sorts = in_array($sort, ['topic', 'created_at', 'updated_at']) ? $sort : 'created_at';
+        //Base query
+        $sql = "SELECT f.*, u.name AS author
+            FROM flashcards f
+            JOIN users u ON f.user_id = u.id ";
+        $params = [];
+        $conditions = []; //Store conditions for WHERE
+
+        if ($search) { //public search by topic or author
+            $conditions[] = "(f.topic LIKE :search OR u.name LIKE :search) or u.username LIKE :search";
+            $params[':search'] = "%$search%";
+        }
+
+        $conditions[] = "status = 'public'";
+
+        if (!empty($conditions)) {
+            $sql .= " WHERE " . implode(" AND ", $conditions);
+        }
+
+        $sql .= " ORDER BY $sorts $orders";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $flashcards = [];
+        foreach ($results as $row) {
+            if ($row['status'] === 'public') {
+                $flashcards[] = new FlashcardModel(
+                    $row['id'],
+                    $row['topic'],
+                    $row['user_id'],
+                    $row['status'],
+                    $row['created_at'],
+                    $row['updated_at']
+                );
+            }
+        }
+        return $flashcards;
+    }
+        
     public function getByID($id){
         $stmt =  $this->pdo->prepare("SELECT * FROM flashcards WHERE id = :id");
         $stmt->execute([':id' => $id]);

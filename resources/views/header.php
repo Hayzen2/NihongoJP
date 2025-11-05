@@ -34,7 +34,7 @@
                 <li class="nav-item">
                     <a class="nav-link">
                         <img src="/assets/bg.png" alt="avatar" class="rounded-circle" width="30" height="30">
-                        <span class="ms-2"><?= $_SESSION['user']['username'] ?? 'User' ?></span>
+                        <span class="ms-2"><?= $_SESSION['user']['username'] ?? $_SESSION['user']['name']  ?></span>
                     </a>
                 </li>
                 <li class="nav-item">

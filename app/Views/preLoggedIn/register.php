@@ -10,15 +10,11 @@
         <div class="card p-4 mx-auto" style="max-width: 600px;">
           <h2 class="text-center mb-4 signup-title">🌸 Sign Up 🌸</h2>
 
-          <?php if (isset($error)): ?>
-            <div class="alert alert-danger"><?php echo $error; ?></div>
-          <?php endif; ?>
-
           <form method="POST" action="/register/local">
             <div class="mb-3">
               <label for="username" class="form-label">Username<span class="required">*</span></label>
               <input type="text" class="form-control" id="username" name="username" required>
-              <div class="is-invalid-exists mt-2">This username already exists.</div>
+              <div class="error-username mt-2"><?= isset($error_username) ? $error_username : '' ?></div>
             </div>
 
             <div class="mb-3">
@@ -29,6 +25,7 @@
             <div class="mb-3">
               <label for="email" class="form-label">Email<span class="required">*</span></label>
               <input type="email" class="form-control" id="email" name="email" required>
+              <div class="error-email mt-2"><?= isset($error_email) ? $error_email : '' ?></div>
             </div>
 
             <div class="mb-3">

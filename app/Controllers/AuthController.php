@@ -74,12 +74,47 @@
                         header("Location: /");
                         exit;
                     } else {
-                        http_response_code(401);
-                        echo 'Invalid login credentials.';
+                        $error = 'Invalid username or password.';
+                        render('preLoggedIn/login', [
+                            'styles' => ['auth/login'],
+                            'scripts' => ['handleCredentials'],
+                            'error' => $error
+                        ]);
                     }
                 } else {
-                    http_response_code(401);
-                    echo 'Invalid login credentials.';
+                    $error = 'Invalid username or password.';
+                    render('preLoggedIn/login', [
+                        'styles' => ['auth/login'],
+                        'scripts' => ['handleCredentials'],
+                        'error' => $error
+                    ]);
+                }
+            }
+        }
+
+        public function checkEmailAvailability() {
+            if($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $email = $_POST['email'] ?? '';
+                $user = $this->userModel->getUserByEmail($email);
+                if($user) {
+                    if($user['auth_provider'] == 'google') {
+                        echo json_encode(['exists' => true , 'message' => 'This email is already registered with Google. Please login with Google.']);
+                    } else{
+                        echo json_encode(['exists' => true, 'message' => 'This email is already taken. Please choose a different email.']);
+                    }
+                } else {
+                    echo json_encode(['exists' => false]);
+                }
+            }
+        }
+        public function checkUsernameAvailability() {
+            if($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $username = $_POST['username'] ?? '';
+                $user = $this->userModel->getUserByUsername($username);
+                if($user) {
+                    echo json_encode(['exists' => true, 'message' => 'This username is already taken. Please choose a different username.']);
+                } else {
+                    echo json_encode(['exists' => false]);
                 }
             }
         }
@@ -94,15 +129,22 @@
                 $password = $_POST['password'] ?? '';
                 $user = $this->userModel->getUserByEmail($email);
                 if($user) {
-                    http_response_code(409);
-                    alert('User already exists.');
-                } else {
-                    $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-                    $user = $this->userModel->createUserLocal($email, $name, $passwordHash, $username, $country_id, $province_id, $city_id);
-                    $_SESSION['user'] = $user;
-                    header("Location: /");
-                    exit;
+                    http_response_code(400);
+                    echo 'Email already exists.';
+                    return;
+                } else{
+                    $user = $this->userModel->getUserByUsername($username);
+                    if($user) {
+                        http_response_code(400);
+                        echo 'Username already exists.';
+                        return;
+                    }
                 }
+                $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+                $user = $this->userModel->createUserLocal($email, $name, $passwordHash, $username, $country_id, $province_id, $city_id);
+                $_SESSION['user'] = $user;
+                header("Location: /");
+                exit;
             }
         }
 
@@ -118,10 +160,6 @@
                 'styles' => ['auth/forgotPassword'],
                 'scripts' => []
             ]);
-        }
-        public function checkUsernameAvailability($username) {
-            $user = $this->userModel->getUserByUsername($username);
-            return $user ? false : true;
         }
         public function logout() {
             session_start();
