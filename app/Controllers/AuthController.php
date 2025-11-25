@@ -193,28 +193,38 @@
                 $email = $_POST['email'] ?? '';
                 $user = $this->userModel->getLocalUserByEmail($email);
                 if($user) {
+                    if($user['auth_provider'] == 'google') {
+                        $error = 'This email is already registered with Google. We cannot reset the password for this account.';
+                        render('preLoggedIn/forgotPassword', [
+                            'styles' => ['auth/forgotPassword'],
+                            'scripts' => ['handleCredentials'],
+                            'error' => $error
+                        ]);
+                    } 
                     $this->userModel->generateAndSendOTP($email);
-                    header("Location: /login/forgot-password/input-otp");
+                    header("Location: /auth/login/forgot-password/input-otp");
                     exit;
                 } else {
-                    http_response_code(404);
-                    return 'No email found for that account.';
+                    $error = 'This email is not registered with us.';
+                    render('preLoggedIn/forgotPassword', [
+                        'styles' => ['auth/forgotPassword'],
+                        'scripts' => ['handleCredentials'],
+                        'error' => $error
+                    ]);
                 }
             }
         }
         public function showVerifyOTPForm() {
-            $email = $_GET['email'] ?? '';
             render('preLoggedIn/inputOTP', [
                 'styles' => ['auth/inputOTP', 'auth/forgotPassword'],
-                'scripts' => ['handleCredentials'],
-                'email' => $email
+                'scripts' => ['handleCredentials']
             ]);
         }
         public function verifyPasswordResetOTP() {
             if($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $email = $_SESSION['otp-email'] ?? '';
                 if(!$email) {
-                    header("Location: /login/forgot-password/reset-expired");
+                    header("Location: /auth/login/forgot-password/reset-expired");
                     exit;
                 }
                 $otpParts = [
@@ -225,7 +235,7 @@
                     $_POST['otp5'] ?? ''
                 ];
                 $otp = implode('', $otpParts); // Combine parts to form full OTP
-                $this->userModel->verifyOTP($otp, $email);
+                $this->userModel->verifyOTP($otp);
                 header("Location: /login/forgot-password/reset-password-form");
                 exit;
             }

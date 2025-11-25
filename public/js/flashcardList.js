@@ -43,7 +43,7 @@ function renumberQA() {
         aLabel.text(`Answer #${index + 1}`);
     });
 }
-$('.btn-create-flashcard').on('click', function() {
+$('.overlay .btn-add-flashcard').on('click', function() {
     $('#new-flashcard-form').submit();
 });
 

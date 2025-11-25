@@ -10,11 +10,11 @@
         <h2 class="text-center mb-4 signup-title">🔑 Verify OTP</h2>
 
         <?php if (isset($error)): ?>
-          <div class="alert alert-danger text-center"><?php echo $error; ?></div>
+          <div class="alert-danger text-center"><?php echo $error; ?></div>
         <?php endif; ?>
 
         <?php if (isset($success)): ?>
-          <div class="alert alert-success text-center"><?php echo $success; ?></div>
+          <div class="alert-success text-center"><?php echo $success; ?></div>
         <?php endif; ?>
 
         <form method="POST" action="/login/forgot-password/verify-otp">

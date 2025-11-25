@@ -1,5 +1,10 @@
 <div class ="overlay d-none text-center" id="newFlashcardModal">
     <card class="flashcard-content p-4 shadow-sm rounded">
+        <?php if (isset($error) && !empty($error)): ?>
+            <div class="alert alert-flashcard alert-danger text-center">
+                <?php echo $error; ?>
+            </div>
+        <?php endif; ?>
         <h1 class="mb-4 text-center">Create New Flashcard</h1>
         <form method = "POST" action = "/flashcards/new" id="new-flashcard-form">
             <div id="questions-section">
@@ -32,7 +37,7 @@
                 </select>
             </div>
         </form>
-        <button type="submit" class="btn btn-create-flashcard">Create</button>
+        <button type="submit" class="btn btn-add-flashcard">Create</button>
         <button type="button" class="btn btn-cancel-flashcard" id="closeModal">Cancel</button>
     </card>
 </div>

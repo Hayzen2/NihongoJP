@@ -10,6 +10,7 @@
             $this->flashcardQAModel = new FlashcardQAModel();
         }
         public function showFlashcardList() {
+            $error = $_GET['error'] ?? '';
             //Private search, sort, and order parameters
             $privateSearch = $_GET['private_search'] ?? '';
             $privateSort = $_GET['private_sort'] ?? 'created_at';
@@ -56,6 +57,7 @@
                 exit; // Stop further execution
             }
             render('flashcards/flashcard-list', [
+                'error' => $error,
                 'privateFlashcards' => $privateFlashcards,
                 'publicFlashcards'  => $publicFlashcards,
                 'privateSearch' => $privateSearch,
@@ -64,7 +66,7 @@
                 'publicSort'    => $publicSort,
                 'privateOrder'  => $privateOrder,
                 'publicOrder'   => $publicOrder,
-                'styles'  => ['flashcards/flashcard-list'],
+                'styles'  => ['flashcards/flashcard-list', 'flashcards/flashcard-form'],
                 'scripts' => ['flashcardList', 'sorting']
             ]);
             
@@ -77,8 +79,8 @@
                 $questions = $_POST['questions'] ?? [];
                 $answers = $_POST['answers'] ?? [];
                 if (!$topic || empty($questions) || empty($answers)) {
-                    http_response_code(400);
-                    echo 'All fields are required.';
+                    $error = 'Please fill in all the required fields.';
+                    header('Location: /flashcards?error=' . urlencode($error));
                     return;
                 }
                 $this->flashcardModel->create($topic, $_SESSION['user']['id'], $status);
@@ -99,8 +101,12 @@
         public function deleteFlashcard($id) {
             $flashcard = $this->flashcardModel->getByID($id);
             if(!$flashcard){
-                http_response_code(404);
-                echo 'Flashcard not found';
+                $error = 'Flashcard not found!';
+                render('flashcards/flashcard-list', [
+                    'error' => $error,
+                    'styles' => ['flashcards/flashcard-list', 'flashcards/flashcard-form'],
+                    'scripts' => ['flashcardList', 'sorting']
+                ]);
                 return;
             }
             $this->flashcardModel->delete($id);
@@ -136,7 +142,7 @@
                 }, $flashcardQASet);
             } else {
                 // Reuse the existing order from session
-                $orderedIds = $_SESSION[$sessionKey]; 
+                $orderedIds = $_SESSION[$sessionKey];
                 // Fetch questions in the stored order
                 $flashcardQASet = [];
                 foreach ($orderedIds as $id) {

@@ -1,4 +1,12 @@
 <?php require_once __DIR__ . '/flashcard-new.php'; ?>
+<?php if (isset($error) && !empty($error)): ?>
+    <!-- open modal by javascript -->
+    <script>
+        $(document).ready(function() {
+            $('#newFlashcardModal').removeClass('d-none');
+        });
+    </script>
+<?php endif; ?>
 <!-- Delete Confirmation Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel">
   <div class="modal-dialog modal-dialog-centered">

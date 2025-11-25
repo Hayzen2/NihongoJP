@@ -8,6 +8,17 @@ body{
         url('../../images/login-background.jpg') center/cover  fixed;
 }
 
+.alert-register {
+  color: #b00020; 
+  background-color: #ffe6e9;
+  border: 1px solid #ff4d6d;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
 .welcome-section {
   text-align: center;
   padding: 3rem;

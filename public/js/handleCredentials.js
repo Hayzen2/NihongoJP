@@ -21,7 +21,6 @@ let error_email = $('.error-email');
 
 $(document).ready(() => {
     isNotMatch.hide();
-    isExists.hide();
     error_username.hide();
     error_email.hide();
 })
@@ -37,8 +36,10 @@ password.on('input', () => {
     requirements.each((index, item) => {
         if(rules[index].test(password.val())) {
             $(item).addClass('valid');
+            $(item).removeClass('invalid');
         } else {
             $(item).addClass('invalid');
+            $(item).removeClass('valid');
         }
     });
 });

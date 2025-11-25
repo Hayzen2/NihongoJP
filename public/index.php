@@ -41,7 +41,6 @@ $routes = [
     '/login/local'  => [AuthController::class, 'handleLocalLogin'],
     '/login/google' => [AuthController::class, 'handleGoogleLogin'],
     '/register/local' => [AuthController::class, 'handleLocalRegister'],
-    '/register/google' => [AuthController::class, 'handleGoogleLogin'],
     '/login/forgot-password' => [AuthController::class, 'showForgotPasswordForm'],
     '/login/forgot-password/send-otp' => [AuthController::class, 'sendPasswordResetOTP'],
     '/login/forgot-password/input-otp' => [AuthController::class, 'showVerifyOTPForm'],
@@ -74,7 +73,7 @@ $routes = [
 
 $found = false;
 $publicRoutes = ['/login', '/register',
-                '/register/local', '/register/google', '/login/google',
+                '/register/local', '/login/google',
                 '/login/forgot-password', '/login/local', '/contact',
                 '/api/countries', '/api/provinces/:countryId',
                 '/api/cities/:provinceId', '/login/forgot-password/send-otp',
