@@ -11,7 +11,7 @@
                     <div class="flashcard">
                         <!--Front Side-->
                         <div class="flashcard-front">
-                            <h3>Question #<?= $index + 1 ?></h3>
+                            <h3>Question #<span class="card-number"><?= $index + 1 ?></span></h3>
                             <p><?= htmlspecialchars($qa->getQuestion()) ?></p>
                             <p class="flip-hint">(Click to flip)</p>
                         </div>
