@@ -9,6 +9,12 @@ function showCard(index) {
         else{
             prevBtn.css('display', 'inline-block');
         }
+        if(index === wrapper.length - 1){
+            nextBtn.css('display', 'none');
+        }
+        else{
+            nextBtn.css('display', 'inline-block');
+        }
         $(card).toggleClass('active', i === index);
         const flashcard = $(card).find('.flashcard');
         flashcard.removeClass('flipped'); // reset flip state when showing a new card
@@ -25,6 +31,26 @@ function prevCard() {
 }
 
 function reshuffle() {
+    const container = $('.flashcard-deck');
+    const shuffled = wrapper.sort(() => Math.random() - 0.5); 
+
+    // reappend shuffled cards
+    shuffled.each(function () {
+        container.append(this);
+    });
+
+    // Renumber after shuffle
+    renumberCards();
+
+    // Reset to first card
+    currentCard = 0;
+    showCard(currentCard);
+}
+
+function renumberCards() {
+    $('.flashcard-wrapper').each((i, card) => {
+        $(card).find('.card-number').text(i + 1);
+    });
 }
 
 const nextBtn = $('.btn.btn-next, .btn-next');
@@ -40,11 +66,18 @@ if (nextBtn) {
 }
 
 if (prevBtn) {
-prevBtn.on('click', (e) => {
-    e.preventDefault();
-    currentCard = (currentCard - 1 + wrapper.length) % wrapper.length;
-    showCard(currentCard);
-});
+    prevBtn.on('click', (e) => {
+        e.preventDefault();
+        currentCard = (currentCard - 1 + wrapper.length) % wrapper.length;
+        showCard(currentCard);
+    });
+}
+
+if (reshuffleBtn) {
+    reshuffleBtn.on('click', (e) => {
+        e.preventDefault();
+        reshuffle();
+    });
 }
 
 $(document).on('keydown', function(event) {
