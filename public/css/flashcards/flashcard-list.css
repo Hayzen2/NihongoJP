@@ -6,6 +6,29 @@ html, body {
   display: flex;
   flex-direction: column;
 }
+
+/* Pagination buttons */
+.pagination .btn {
+  border-radius: 10px;
+  min-width: 45px;
+}
+
+.pagination .btn-pink {
+  background: #d63384;
+  border: none;
+  color: white;
+}
+
+.pagination .btn-outline-secondary {
+  border-color: #d63384;
+  color: #d63384;
+}
+
+.pagination .btn-outline-secondary:hover {
+  background: #d63384;
+  color: white;
+}
+
 .container h1 {
   font-weight: 700;
   color: #b83b5e;

@@ -1,6 +1,10 @@
 <div class="container py-5">
     <h1 class="main-title text-center mb-5">📘 Grammar Lessons - <?= $level ?></h1>
-
+    <div>
+        <a href="/lessons" class="btn btn-outline-secondary mb-4 shadow-sm">
+            ⟵ Back to Skills Lessons
+        </a>
+    </div>
     <?php if (empty($lessons)): ?>
         <p class="text-center text-muted mt-5">No grammar lessons available for this level yet.</p>
     <?php else: ?>

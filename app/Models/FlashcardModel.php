@@ -29,24 +29,22 @@ class FlashcardModel {
             return getPDO();
         })();
     }
-    public function getId() {
-        return $this->id;
-    }
-    public function getTopic(){
-        return $this->topic;
-    }
-    public function getUserId() {
-        return $this->user_id;
-    }
-    public function getStatus() {
-        return $this->status;
-    }
-    public function getCreatedAt() {
-        return $this->createdAt;
-    }
-    public function getUpdatedAt() {
-        return $this->updatedAt;
-    }
+    //getters
+    public function getId() { return $this->id; }
+    public function getTopic() { return $this->topic; }
+    public function getUserId() { return $this->user_id; }
+    public function getStatus() { return $this->status; }
+    public function getCreatedAt() { return $this->createdAt; }
+    public function getUpdatedAt() { return $this->updatedAt; }
+
+    //setters
+    public function setId($id) { $this->id = $id; }
+    public function setTopic($topic) { $this->topic = $topic; }
+    public function setUserId($user_id) { $this->user_id = $user_id; }
+    public function setStatus($status) { $this->status = $status; }
+    public function setCreatedAt($createdAt) { $this->createdAt = $createdAt; }
+    public function setUpdatedAt($updatedAt) { $this->updatedAt = $updatedAt; }
+
     public function getUsernameByUserId($user_id) {
         $stmt = $this->pdo->prepare("SELECT username FROM users WHERE id = :user_id");
         $stmt->execute([':user_id' => $user_id]);
@@ -60,9 +58,12 @@ class FlashcardModel {
         return $result['name'];
     }
 
-    public function getBySortingPrivate($search='', $sort='', $order='') {
+    public function getBySortingPrivate($search='', $perPage = 0, $offset = 0, $sort='', $order='', $user_id='') {
         $orders = strtoupper($order) === 'ASC' ? 'ASC' : 'DESC';
         $sorts = in_array($sort, ['topic', 'created_at', 'updated_at']) ? $sort : 'created_at';
+        $perPage = (int)$perPage;
+        $offset  = (int)$offset;
+
         //Base query
         $sql = "SELECT f.*, u.name AS author_name
             FROM flashcards f
@@ -75,7 +76,8 @@ class FlashcardModel {
             $params[':search'] = "%$search%";
         }
 
-        $conditions[] = "status = 'private'";
+        $conditions[] = "f.user_id = :user_id";
+        $params[':user_id'] = $user_id;
 
         if (!empty($conditions)) {
             $sql .= " WHERE " . implode(" AND ", $conditions);
@@ -83,6 +85,10 @@ class FlashcardModel {
 
         $sql .= " ORDER BY $sorts $orders";
 
+        //Limit and offset
+        if ($perPage > 0) {
+            $sql .= " LIMIT $perPage OFFSET $offset"; 
+        }
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -99,11 +105,26 @@ class FlashcardModel {
         }
         return $flashcards;
     }
+
+    public function getTotalPrivateFlashcards($search='', $user_id='') {
+        $sql = "SELECT COUNT(*) FROM flashcards WHERE user_id = :user_id";
+        $params = [':user_id' => $user_id];
+        if ($search) {
+            $sql .= " AND topic LIKE :search";
+            $params[':search'] = "%$search%";
+        }
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+        return (int) $stmt->fetchColumn();
+    }
     
 
-    public function getBySortingPublic($search='', $sort='', $order='') {
+    public function getBySortingPublic($search='', $perPage = 0, $offset = 0, $sort='', $order='') {
         $orders = strtoupper($order) === 'ASC' ? 'ASC' : 'DESC';
         $sorts = in_array($sort, ['topic', 'created_at', 'updated_at']) ? $sort : 'created_at';
+        $perPage = (int)$perPage;
+        $offset  = (int)$offset;
+
         //Base query
         $sql = "SELECT f.*, u.name AS author
             FROM flashcards f
@@ -124,6 +145,11 @@ class FlashcardModel {
 
         $sql .= " ORDER BY $sorts $orders";
 
+        //Limit and offset
+        if ($perPage > 0) {
+            $sql .= " LIMIT $perPage OFFSET $offset";
+        }
+
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -141,6 +167,18 @@ class FlashcardModel {
             }
         }
         return $flashcards;
+    }
+
+    public function getTotalPublicFlashcards($search='') {
+        $sql = "SELECT COUNT(*) FROM flashcards WHERE status = 'public'";
+        $params = [];
+        if ($search) {
+            $sql .= " AND (topic LIKE :search OR u.name LIKE :search) or u.username LIKE :search";
+            $params[':search'] = "%$search%";
+        }
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+        return (int) $stmt->fetchColumn();
     }
         
     public function getByID($id){

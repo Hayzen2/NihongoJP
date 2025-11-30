@@ -11,20 +11,30 @@
         }
         public function showFlashcardList() {
             $error = $_GET['error'] ?? '';
+            $perPage = 5;
             //Private search, sort, and order parameters
             $privateSearch = $_GET['private_search'] ?? '';
             $privateSort = $_GET['private_sort'] ?? 'created_at';
             $privateOrder = $_GET['private_order'] ?? 'desc';
+            $privatePage = $_GET['private_page'] ?? 1;
+            $privateOffset = ($privatePage - 1) * $perPage;
 
             //Public search, sort, and order parameters
             $publicSearch = $_GET['public_search'] ?? '';
             $publicSort = $_GET['public_sort'] ?? 'topic';
             $publicOrder = $_GET['public_order'] ?? 'asc';
+            $publicPage = $_GET['public_page'] ?? 1;
+            $publicOffset = ($publicPage - 1) * $perPage;
 
             //Query separately
-            $privateFlashcards = $this->flashcardModel->getBySortingPrivate($privateSearch, $privateSort, $privateOrder, $_SESSION['user']['id']);
-            $publicFlashcards = $this->flashcardModel->getBySortingPublic($publicSearch, $publicSort, $publicOrder);
+            $privateFlashcards = $this->flashcardModel->getBySortingPrivate($privateSearch, $perPage, $privateOffset, $privateSort, $privateOrder, $_SESSION['user']['id']);
+            $publicFlashcards = $this->flashcardModel->getBySortingPublic($publicSearch, $perPage, $publicOffset, $publicSort, $publicOrder);
 
+            $totalPrivateFlashcards = $this->flashcardModel->getTotalPrivateFlashcards($privateSearch , $_SESSION['user']['id']);
+            $totalPublicFlashcards = $this->flashcardModel->getTotalPublicFlashcards($publicSearch);
+
+            $totalPagesPrivate = ceil($totalPrivateFlashcards / $perPage);
+            $totalPagesPublic = ceil($totalPublicFlashcards / $perPage);
             //definition: ajax is a request made to fetch data without reloading the page
             if (isset($_GET['ajax'])) {
                 header('Content-Type: application/json');
@@ -40,6 +50,8 @@
                             'updated_at' => $card->getUpdatedAt(),
                         ];
                     }
+                    $data['currentPage'] = (int)$privatePage;
+                    $data['totalPages'] = $totalPagesPrivate;
                 }
                 if($type === 'public') {
                     foreach ($publicFlashcards as $card) {
@@ -50,8 +62,11 @@
                             ?? $card->getNameByUserId($card->getUserId()),
                             'created_at' => $card->getCreatedAt(),
                             'updated_at' => $card->getUpdatedAt(),
+                            
                         ];
                     }
+                    $data['currentPage'] = (int)$publicPage;
+                    $data['totalPages'] = $totalPagesPublic;
                 }
                 echo json_encode($data);
                 exit; // Stop further execution
@@ -67,7 +82,7 @@
                 'privateOrder'  => $privateOrder,
                 'publicOrder'   => $publicOrder,
                 'styles'  => ['flashcards/flashcard-list', 'flashcards/flashcard-form'],
-                'scripts' => ['flashcardList', 'sorting']
+                'scripts' => ['flashcardList', 'flashcard-sorting']
             ]);
             
         }
@@ -105,7 +120,7 @@
                 render('flashcards/flashcard-list', [
                     'error' => $error,
                     'styles' => ['flashcards/flashcard-list', 'flashcards/flashcard-form'],
-                    'scripts' => ['flashcardList', 'sorting']
+                    'scripts' => ['flashcardList', 'flashcard-sorting']
                 ]);
                 return;
             }

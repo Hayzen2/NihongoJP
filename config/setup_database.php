@@ -7,7 +7,6 @@
     try{
         $conn = new PDO("mysql:host=$severname", $username, $password); //Connect to the server
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
         //Check if database exists
         $stmt = $conn->query("SHOW DATABASES LIKE '$dbname'");
         $result = $stmt->fetch();
@@ -27,13 +26,57 @@
             $pdo->exec(file_get_contents(__DIR__ . '/sqls/states.sql'));
         }
         $sqlFiles = [
-            __DIR__ . '/sqls/users.sql',
-            __DIR__ . '/sqls/flashcards.sql',
-            __DIR__ . '/sqls/flashcards_qa.sql',
-            __DIR__ . '/sqls/books.sql'
+            'users'        => __DIR__ . '/sqls/users.sql',
+            'flashcards'   => __DIR__ . '/sqls/flashcards.sql',  // has CREATE + INSERT
+            'flashcards_qa'=> __DIR__ . '/sqls/flashcards_qa.sql',
+            'books'        => __DIR__ . '/sqls/books.sql',
+            'vocabs'       => __DIR__ . '/sqls/vocabs.sql'
         ];
-        foreach($sqlFiles as $sqlFile){
-            $pdo->exec(file_get_contents($sqlFile));
+
+        foreach ($sqlFiles as $table => $file) {
+            // Import only if TABLE DOESN'T EXIST
+            if ($pdo->query("SHOW TABLES LIKE '$table'")->rowCount() == 0) {
+                $pdo->exec(file_get_contents($file));
+            }
+        }
+
+        // Detect if table is empty -> Only import CSV if empty
+        $count = $pdo->query("SELECT COUNT(*) AS c FROM vocabs")->fetch()['c'];
+        if ($count == 0) {
+            $csvFiles = [
+                'n5.csv' => 'N5',
+                'n4.csv' => 'N4',
+                'n3.csv' => 'N3',
+                'n2.csv' => 'N2',
+                'n1.csv' => 'N1'
+            ];
+
+            foreach ($csvFiles as $file => $level) {
+                $path = __DIR__ . "/csv/vocabulary/" . $file;
+                if (!file_exists($path)) {
+                    continue;
+                }
+                $handle = fopen($path, "r"); // Open CSV
+
+                // Skip header row
+                fgetcsv($handle);
+
+                $stmt = $pdo->prepare("
+                    INSERT INTO vocabs (word, reading, meaning, jlpt_level)
+                    VALUES (?, ?, ?, ?)
+                ");
+
+                while (($data = fgetcsv($handle, 10000, ",")) !== false) { // Read CSV line by line
+                    $stmt->execute([
+                        $data[0] ?? '',
+                        $data[1] ?? '',
+                        $data[2] ?? '',
+                        $level // JLPT level not from CSV
+                    ]);
+                }
+
+                fclose($handle);
+            }
         }
     }catch(PDOException $e){
         die("Connection failed: " . $e->getMessage());

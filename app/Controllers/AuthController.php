@@ -42,9 +42,10 @@
                 if ($payload) {
                     $email = $payload['email'];
                     $name = $payload['name'];
+                    $avatar = $payload['picture'];
                     $user = $this->userModel->getUserByEmail($email);
                     if (!$user) {
-                        $user= $this->userModel->createUserGoogle($email, $name);
+                        $user= $this->userModel->createUserGoogle($email, $name, $avatar);
                     } else{
                         $user = $this->userModel->getUserByEmail($email);
                     }

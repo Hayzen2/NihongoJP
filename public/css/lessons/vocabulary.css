@@ -1,0 +1,164 @@
+body, html {
+    background: linear-gradient(135deg, #fff5f8, #fdf0ff);
+    font-family: 'Segoe UI', sans-serif;
+    color: #222;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Titles */
+.main-title {
+    color: #d63384;
+    font-weight: 800;
+    font-size: 2.8rem;
+}
+
+/* Search box */
+.controls .search-box {
+    border: 2px solid #ffc2d4; 
+    border-radius: 10px;
+    background: #fff8fb;
+}
+
+.controls .search-box:focus {
+    border-color: #d63384;
+    box-shadow: 0 0 6px rgba(214, 51, 132, 0.4);
+}
+
+/* Vocabulary cards */
+.vocab-card {
+    background: #fffdfa;
+    border: 1px solid #f4d4df;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.vocab-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    background: #fff0f5;
+    border-color: #ffaccf;
+    box-shadow: 0 8px 18px rgba(255, 105, 180, 0.2);
+}
+
+.vocab-word {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #d63384;
+    margin-bottom: 0.5rem;
+}
+
+.vocab-reading {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #b21e4b;
+    margin-bottom: 0.25rem;
+}
+
+.vocab-meaning {
+    font-size: 1rem;
+    color: #555;
+}
+
+/* Pagination buttons */
+.pagination .btn {
+    border-radius: 10px;
+    min-width: 45px;
+}
+
+.pagination .btn-pink {
+    background: #d63384;
+    border: none;
+    color: white;
+}
+
+.pagination .btn-outline-secondary {
+    border-color: #d63384;
+    color: #d63384;
+}
+
+.pagination .btn-outline-secondary:hover {
+    background: #d63384;
+    color: white;
+}
+
+.draw-board-container {
+    background: #fff8fb;
+    border: 1px solid #ffc2d4;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.recognized-container {
+    background: #fffdfa;
+    border: 1px solid #f4d4df;
+    border-radius: 10px;
+    padding: 0.5rem;
+}
+
+.recognized-container {
+    margin-top: 1rem;
+}
+
+.recognized-output button {
+    background: #ffe5ef !important;
+    color: #d63384 !important;
+    border: 2px solid #ffc2d4 !important;
+    border-radius: 12px !important;
+    padding: 0.3rem 0.9rem !important;
+    margin: 4px !important;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.recognized-output button:hover {
+    background: #ffd3e3 !important;
+    border-color: #ff8fb8 !important;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(214, 51, 132, 0.25);
+}
+
+.vocab-controls .btn-write {
+    background: linear-gradient(135deg, #ff7bbf, #d63384);
+    color: white;
+    font-weight: 600;
+    border: none;
+    border-radius: 30px;
+    padding: 0.6rem 1.4rem;
+    font-size: 1rem;
+    box-shadow: 0 4px 12px rgba(214, 51, 132, 0.3);
+    transition: all 0.2s ease;
+}
+.vocab-controls .btn-write:hover {
+    background: linear-gradient(135deg, #ff94ce, #e04c98);
+    transform: translateY(-2px);
+    color: #80062a;
+    box-shadow: 0 8px 22px rgba(214, 51, 132, 0.4);
+}
+
+.draw-board-container .canvas-modal-close {
+    float: right;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #d63384;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 4px 10px;
+    border-radius: 10px;
+}
+.draw-board-container .canvas-modal-close:hover {
+    background: #ffe5ef;
+    color: #b21e4b;
+    transform: scale(1.1);
+}
+
+#drawBoard {
+    display: block;
+    margin: 0 auto;
+    border: 1px solid #ccc; 
+    border-radius:10px;
+}
+

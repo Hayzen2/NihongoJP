@@ -22,14 +22,10 @@ The project provides structured lessons, flashcards, quizzes, and AI-powered pra
   Access curated Japanese learning books and materials directly from the platform.
 
 - 📊 **Progress Tracking**  
-  Monitor learning history, completed lessons, and quiz results with achievements.
+  Monitor quiz results with achievements.
 
 - 🤖 **AI Chatbot Integration**  
-  Practice real Japanese conversations with an AI chatbot.
+  Ask about the materials with an AI chatbot (copilot integration).
 
-### ⚡ Future Expansion
 - 🖌️ **Handwriting Recognition**  
-  Draw kanji/words on canvas and get real-time stroke validation.
-- 🔍 **Romaji → Kana Search Engine**  
-  Search for words using romaji, hiragana, or katakana.
----
+  Draw kanji/hiragana/katakana on canvas and get real-time stroke validation to search words.

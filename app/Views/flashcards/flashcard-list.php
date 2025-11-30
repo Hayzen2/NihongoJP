@@ -31,8 +31,8 @@
 <div class="container mt-5 text-center">
     <h1 class="mb-4">Flashcards List </h1>
     <p class="mb-4">Your collection of Japanese flashcards!</p>
-    <!-- Private Flashcards -->
-    <h2 class="mb-4 private-title">🔒 Private Flashcards</h2>
+    <!-- Your Flashcards -->
+    <h2 class="mb-4 private-title">🔒 Your Flashcards</h2>
     <form method="GET" class="controls private-controls d-flex justify-content-center align-items-center flex-wrap gap-3 mb-4">
         <label for="private_search" class="fw-bold">Search:</label>
         <input type="text" name="private_search" id="private_search" placeholder="Search by topic..." value="<?= htmlspecialchars($privateSearch) ?>">
@@ -49,7 +49,6 @@
             <option value="desc" <?= $privateOrder==='desc'?'selected':'' ?>>Descending</option>
         </select>
     </form>
-
     <div class="flashcard-table mb-3 d-flex justify-content-center align-items-center flex-column">
         <table class="table table-bordered mb-5" id="private-table">
             <thead>
@@ -75,6 +74,7 @@
                 <?php endforeach; ?>
             </tbody>
         </table>
+        <div id="private-pagination" class="pagination-controls pagination mt-3"></div>
     </div>
 
     <!-- Public Flashcards -->
@@ -131,6 +131,7 @@
                 <?php endforeach; ?>
             </tbody>
         </table>
+        <div id="public-pagination" class="pagination-controls pagination mt-3"></div>
     </div>
 </div>
 <!-- Use javascript:void(0) to execute JS without reloading or navigate to another page -->

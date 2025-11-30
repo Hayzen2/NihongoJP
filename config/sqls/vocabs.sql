@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS vocabs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    word VARCHAR(255),
+    reading VARCHAR(255),
+    meaning TEXT,
+    jlpt_level VARCHAR(10)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

@@ -17,18 +17,18 @@ class FlashcardQAModel {
             return getPDO();
         })();
     }
-    public function getId() {
-        return $this->id;
-    }
-    public function getFlashcardId() {
-        return $this->flashcardId;
-    }
-    public function getQuestion() {
-        return $this->question;
-    }
-    public function getAnswer() {
-        return $this->answer;
-    }
+    //getters
+    public function getId() { return $this->id; }
+    public function getFlashcardId() { return $this->flashcardId; }
+    public function getQuestion() { return $this->question; }
+    public function getAnswer() { return $this->answer; }
+
+    //setters
+    public function setId($id) { $this->id = $id; }
+    public function setFlashcardId($flashcardId) { $this->flashcardId = $flashcardId; }
+    public function setQuestion($question) { $this->question = $question; }
+    public function setAnswer($answer) { $this->answer = $answer; }
+
     public function getByID($id){
         $stmt = $this->pdo->prepare("SELECT * FROM flashcards_qa WHERE id = :id");
         $stmt->execute([':id' => $id]);

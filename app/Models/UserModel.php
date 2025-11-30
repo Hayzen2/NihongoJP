@@ -16,6 +16,8 @@ class UserModel {
     private $passwordHash;
     private $authProvider;
     private $createdAt;
+    private $user_rank;
+    private $avatar;
     public function __construct(
         $pdo = null,
         $id = null,
@@ -27,7 +29,10 @@ class UserModel {
         $city = null,
         $passwordHash = null,
         $authProvider = null,
-        $createdAt = null
+        $createdAt = null,
+        $user_rank = null,
+        $avatar = null
+
     ) {
         $this->id = $id;
         $this->email = $email;
@@ -39,6 +44,8 @@ class UserModel {
         $this->passwordHash = $passwordHash;
         $this->authProvider = $authProvider;
         $this->createdAt = $createdAt;
+        $this->user_rank = $user_rank;
+        $this->avatar = $avatar;
         $this->pdo = $pdo ?: (function() {
             require_once __DIR__ . '/../../config/setup_database.php';
             $pdo = getPDO();
@@ -46,6 +53,7 @@ class UserModel {
             return $pdo;
         })();
     }
+    //getters
     public function getId() { return $this->id; }
     public function getEmail() { return $this->email; }
     public function getName() { return $this->name; }
@@ -56,6 +64,22 @@ class UserModel {
     public function getPasswordHash() { return $this->passwordHash; }
     public function getAuthProvider() { return $this->authProvider; }
     public function getCreatedAt() { return $this->createdAt; }
+    public function getUserRank() { return $this->user_rank; }
+    public function getAvatar() { return $this->avatar; }
+
+    //setters
+    public function setId($id) { $this->id = $id; }
+    public function setEmail($email) { $this->email = $email; }
+    public function setName($name) { $this->name = $name; }
+    public function setUsername($username) { $this->username = $username; }
+    public function setCountry($country) { $this->country = $country; }
+    public function setProvince($province) { $this->province = $province; }
+    public function setCity($city) { $this->city = $city; }
+    public function setPasswordHash($passwordHash) { $this->passwordHash = $passwordHash; }
+    public function setAuthProvider($authProvider) { $this->authProvider = $authProvider; }
+    public function setCreatedAt($createdAt) { $this->createdAt = $createdAt; }
+    public function setUserRank($user_rank) { $this->user_rank = $user_rank; }
+    public function setAvatar($avatar) { $this->avatar = $avatar; }
     
     public function getUserByUsername($username) {
         $stmt = $this->pdo->prepare("SELECT * FROM users WHERE username = :username");
@@ -79,9 +103,9 @@ class UserModel {
         ':username' => $username, ':country_id' => $country_id, ':state_id' => $state_id, ':city_id' => $city_id]);
         return $this->getUserByEmail($email); //return user obj
     }
-    public function createUserGoogle($email, $name) {
-        $stmt = $this->pdo->prepare("INSERT INTO users (email, name, auth_provider) VALUES (:email, :name, 'google')");
-        $stmt->execute([':email' => $email, ':name' => $name]);
+    public function createUserGoogle($email, $name, $avatar) {
+        $stmt = $this->pdo->prepare("INSERT INTO users (email, name, avatar , auth_provider) VALUES (:email, :name, :avatar, 'google')");
+        $stmt->execute([':email' => $email, ':name' => $name, ':avatar' => $avatar]);
         return $this->getUserByEmail($email); //return user obj
     }
     public function getUserById($id) {

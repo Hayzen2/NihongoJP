@@ -5,12 +5,16 @@ use PDO;
 
 class BookModel {
     private $pdo;
+    private $id;
     public function __construct($pdo = null) {
         $this->pdo = $pdo ?: (function() {
             require_once __DIR__ . '/../../config/setup_database.php';
             return getPDO();
         })();
     }
+
+    // getters
+    public function getId() { return $this->id; }
 
     // Get all books with their JLPT levels
     public function getAllBooks() {
