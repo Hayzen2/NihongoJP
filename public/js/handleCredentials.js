@@ -1,4 +1,10 @@
 function handleCredentialResponse(response) {
+    const overlayLoading = $('#loadingOverlay');
+    if(overlayLoading){
+        overlayLoading.css('display', 'flex');
+        overlayLoading.removeClass('hidden');
+    }
+
     fetch("/login/google", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -6,8 +12,13 @@ function handleCredentialResponse(response) {
         credentials: "include" // include cookies cross-origin
     })
     .then(res => {
-        if (res.ok) window.location.href = "/";
-        else alert("Google login failed");
+        if (res.ok) {
+            window.location.href = "/";
+        }
+        else {
+            alert("Google login failed");
+            overlayLoading.style.display = 'none';
+        }
     });
 }
 let confirmPassword = $('#confirm_password');

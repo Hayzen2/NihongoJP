@@ -15,6 +15,7 @@ use App\Controllers\FlashcardController;
 use App\Controllers\SubscriptionController;
 use App\Controllers\ContactController;
 use App\Controllers\BookController;
+use App\Controllers\ChatbotController;
 use Dotenv\Dotenv; // Load environment variables like GOOGLE_CLIENT_ID
 
 $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
@@ -69,6 +70,7 @@ $routes = [
     '/api/countries' => [AuthController::class, 'getCountries'],
     '/api/provinces/:countryId' => [AuthController::class, 'getProvincesByCountry'],
     '/api/cities/:provinceId' => [AuthController::class, 'getCitiesByProvince'],
+    '/send-message' => [ChatbotController::class, 'sendMessage'],
 ];
 
 $found = false;
@@ -111,10 +113,13 @@ foreach ($routes as $path => [$controllerClass, $method]) {
         $controller->$method(...$matches);
         $found = true;
         break;
+    } else{
+        $found = false;
     }
 }
 
 if (!$found) {
-    header("HTTP/1.0 404 Not Found");
-    echo "404 Not Found";
+    http_response_code(404);
+    include __DIR__ . '/../resources/views/404.php';
+    exit;
 }

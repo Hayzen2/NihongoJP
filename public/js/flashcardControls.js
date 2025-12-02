@@ -3,6 +3,9 @@ const wrapper = $('.flashcard-wrapper');
 
 function showCard(index) {
     wrapper.each((i, card) => {
+        if(wrapper.length === 1){
+            reshuffleBtn.css('display', 'none');
+        }
         if(index === 0){
             prevBtn.css('display', 'none');
         }
