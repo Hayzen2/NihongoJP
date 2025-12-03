@@ -58,6 +58,23 @@ class FlashcardQAModel {
         return null;
     }
 
+    public function getQASet($flashcardId){
+        $stmt = $this->pdo->prepare("SELECT * FROM flashcards_qa WHERE flashcard_id = :flashcard_id");
+        $stmt->execute([':flashcard_id' => $flashcardId]);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC); // fetch all rows
+
+        $qaArray = [];
+
+        foreach($results as $result){
+            $qaArray[] = [
+                'question' => $result['question'],
+                'answer' => $result['answer']
+            ];
+        }
+
+        return $qaArray;
+    }
+
     public function create($flashcardId, $question, $answer) {
         $stmt = $this->pdo->prepare("INSERT INTO flashcards_qa (flashcard_id, question, answer) VALUES (:flashcard_id, :question, :answer)");
         return $stmt->execute([
@@ -80,11 +97,17 @@ class FlashcardQAModel {
         return $stmt->execute([':id' => $id]);
     }
 
+    //delete all flashcards_qa where flashcard_id = $flashcardId
+    public function deleteByFlashcardId($flashcardId) {
+        $stmt = $this->pdo->prepare("DELETE FROM flashcards_qa WHERE flashcard_id = :flashcard_id");
+        return $stmt->execute([':flashcard_id' => $flashcardId]);
+    }
+
     public function getRandomQuestionSet($flashcardId) {
         $stmt = $this->pdo->prepare("
-        SELECT id, flashcard_id, question, answer 
-        FROM flashcards_qa 
-        WHERE flashcard_id = :flashcard_id 
+        SELECT id, flashcard_id, question, answer
+        FROM flashcards_qa
+        WHERE flashcard_id = :flashcard_id
         ORDER BY RAND()
         ");
         $stmt->execute([':flashcard_id' => $flashcardId]);

@@ -16,14 +16,14 @@
             $privateSearch = $_GET['private_search'] ?? '';
             $privateSort = $_GET['private_sort'] ?? 'created_at';
             $privateOrder = $_GET['private_order'] ?? 'desc';
-            $privatePage = $_GET['private_page'] ?? 1;
+            $privatePage = max(1, (int)($_GET['private_page'] ?? 1));
             $privateOffset = ($privatePage - 1) * $perPage;
 
             //Public search, sort, and order parameters
             $publicSearch = $_GET['public_search'] ?? '';
             $publicSort = $_GET['public_sort'] ?? 'topic';
             $publicOrder = $_GET['public_order'] ?? 'asc';
-            $publicPage = $_GET['public_page'] ?? 1;
+            $publicPage = max(1, (int)($_GET['public_page'] ?? 1));
             $publicOffset = ($publicPage - 1) * $perPage;
 
             //Query separately
@@ -46,6 +46,7 @@
                         $data['privateFlashcards'][] = [
                             'id' => $card->getId(),
                             'topic' => $card->getTopic(),
+                            'status' => $card->getStatus(),
                             'created_at' => $card->getCreatedAt(),
                             'updated_at' => $card->getUpdatedAt(),
                         ];
@@ -93,9 +94,9 @@
                 $status = $_POST['status'] ?? 'public';
                 $questions = $_POST['questions'] ?? [];
                 $answers = $_POST['answers'] ?? [];
-                if (!$topic || empty($questions) || empty($answers)) {
+                if (!$topic || empty($questions) || empty($answers) || empty($status)) {
                     $error = 'Please fill in all the required fields.';
-                    header('Location: /flashcards?error=' . urlencode($error));
+                    header('Location: /flashcards?error_add=' . urlencode($error));
                     return;
                 }
                 $this->flashcardModel->create($topic, $_SESSION['user']['id'], $status);
@@ -124,7 +125,7 @@
                 ]);
                 return;
             }
-            $this->flashcardModel->delete($id);
+            $this->flashcardModel->delete($id, $_SESSION['user']['id']);
             header('Location: /flashcards');
             exit;
         }
@@ -156,25 +157,80 @@
                     return $qa->getId();
                 }, $flashcardQASet);
             } else {
-                // Reuse the existing order from session
-                $orderedIds = $_SESSION[$sessionKey];
-                // Fetch questions in the stored order
-                $flashcardQASet = [];
-                foreach ($orderedIds as $id) {
-                    $qa = $this->flashcardQAModel->getByID($id);
-                    if ($qa) {
-                        $flashcardQASet[] = $qa;
-                    }
+                unset($_SESSION[$sessionKey]);
+                $flashcardQASet = $this->flashcardQAModel->getRandomQuestionSet($flashcardId);
+                if(!$flashcardQASet){
+                    http_response_code(404);
+                    echo 'Flashcard not found';
+                    return;
                 }
+                // Store the order of question IDs in session
+                $_SESSION[$sessionKey] = array_map(function($qa) {
+                    return $qa->getId();
+                }, $flashcardQASet);
             }
-            
-            
             render('flashcards/flashcard',[
                 'flashcard' => $flashcard,
                 'flashcardQASet' => $flashcardQASet,
                 'scripts' => ['flashcardControls'],
                 'styles' => ['flashcards/flashcard']
             ]);
+        }
+
+        public function getFlashcardContent($flashcardId) {
+            header('Content-Type: application/json');
+            $flashcard = $this->flashcardModel->getByID($flashcardId);
+            if(!$flashcard){
+                echo json_encode(['error' => 'Flashcard not found']);
+                return;
+            }
+            $flashcardQASet = $this->flashcardQAModel->getQASet($flashcardId);
+            echo json_encode([
+                'id' => $flashcard->getId(),
+                'topic' => $flashcard->getTopic(),
+                'status' => $flashcard->getStatus(),
+                'flashcardQASet' => $flashcardQASet
+            ]);
+            exit;
+        }
+
+        public function editFlashcard($flashcardId) {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $topic = $_POST['topic'] ?? '';
+                $status = $_POST['status'] ?? 'public';
+                $questions = $_POST['questions'] ?? [];
+                $answers = $_POST['answers'] ?? [];
+
+                if (empty($topic) || empty($status) || empty($questions) || empty($answers)) {
+                    $error = 'Please fill in all the required fields.';
+                    header('Location: /flashcards?error_edit=' . urlencode($error));
+                    return;
+                }
+                if($this->flashcardModel->getByID($flashcardId) === null){
+                    $error = 'Flashcard not found!';
+                    header('Location: /flashcards?error_edit=' . urlencode($error));
+                    return;
+                }
+                $userId = $_SESSION['user']['id'];
+                if($this->flashcardModel->update($flashcardId, $topic, $userId, $status) === false){
+                    $error = 'Flashcard not found!';
+                    header('Location: /flashcards?error_edit=' . urlencode($error));
+                    return;
+                }
+                $this->flashcardQAModel->deleteByFlashcardId($flashcardId);
+                foreach ($questions as $index => $question) { // Use index to match question with answer
+                    $answer = $answers[$index] ?? '';
+                    if ($question && $answer) {
+                        $this->flashcardQAModel->create($flashcardId, $question, $answer);
+                    }
+                }
+                // Clear session order so front-end sees new QA set
+                unset($_SESSION['flashcard_order__' . $flashcardId]);
+                header('Location: /flashcards');
+            } else {
+                http_response_code(405);
+                echo 'Method Not Allowed';
+            }
         }
         
     }

@@ -10,9 +10,9 @@
             <div id="questions-section">
                 <div class="mb-3">
                     <label for="topic" class="form-label">Topic</label>
-                    <input type="text" class="form-control" id="topic" name="topic" required>
+                    <input type="text" class="form-control" id="topic-new" name="topic" required>
                 </div>
-                <div id="qa-container">
+                <div id="new-qa-container">
                     <div class="qa-item mb-4 p-3 rounded shadow-sm">
                     <label for ="question-1" class="form-label">Question #1</label>
                     <textarea id="question-1" class="form-control mb-2" rows="3" name="questions[]" placeholder="Enter question" required></textarea>
@@ -21,17 +21,17 @@
                     <textarea id="answer-1" class="form-control mb-2" rows="3" name="answers[]" placeholder="Enter answer" required></textarea>
 
                     <!-- Delete QA Button -->
-                    <button type="button" class="btn btn-delete-qa">Delete</button>
+                    <button type="button" class="btn btn-delete-qa d-none">Delete</button>
                     </div>
                 </div>
             </div>
             <div class="mb-3 d-flex justify-content-center align-items-center gap-2">
-                <button type="button" class="btn btn-new-question">+</button>
+                <button type="button" class="btn btn-new-question-new">+</button>
             </div>
 
             <div class="mb-3">
                 <label for="status" class="form-label">Status</label>
-                <select class="form-select" id="status" name="status" required>
+                <select class="form-select" id="status-new" name="status" required>
                 <option id="public" value="public">🌍 Public</option>
                 <option id="private" value="private">🔒 Private</option>
                 </select>

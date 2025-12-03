@@ -1,9 +1,17 @@
 <?php require_once __DIR__ . '/flashcard-new.php'; ?>
-<?php if (isset($error) && !empty($error)): ?>
+<?php require_once __DIR__ . '/flashcard-edit.php'; ?>
+<?php if (isset($error_add) && !empty($error_add)): ?>
     <!-- open modal by javascript -->
     <script>
         $(document).ready(function() {
             $('#newFlashcardModal').removeClass('d-none');
+        });
+    </script>
+    <?php elseif (isset($error_edit) && !empty($error_edit)): ?>
+    <!-- open modal by javascript -->
+    <script>
+        $(document).ready(function() {
+            $('#editFlashcardModal').removeClass('d-none');
         });
     </script>
 <?php endif; ?>
@@ -54,6 +62,7 @@
             <thead>
                 <tr>
                     <th>Topic</th>
+                    <th>Status</th>
                     <th>Created At</th>
                     <th>Updated At</th>
                     <th>Actions</th>
@@ -63,12 +72,14 @@
                 <?php foreach($privateFlashcards as $card): ?>
                 <tr>
                     <td><?= is_array($card) ? $card['topic'] : $card->getTopic(); ?></td>
+                    <td><?= is_array($card) ? $card['status'] : $card->getStatus(); ?></td>
                     <td><?= is_array($card) ? date('d F Y', strtotime($card['created_at'])) : date('d F Y', strtotime($card->getCreatedAt())); ?></td>
                     <td><?= is_array($card) ? date('d F Y', strtotime($card['updated_at'])) : date('d F Y', strtotime($card->getUpdatedAt())); ?></td>
                     <td>
-                        <a href="/flashcards/view/<?= is_array($card) ? $card['id'] : $card->getId(); ?>" class="btn btn-info btn-sm">View</a>
-                        <a href="/flashcards/edit/<?= is_array($card) ? $card['id'] : $card->getId(); ?>" class="btn btn-primary btn-sm">Edit</a>
-                        <button onclick="openDeleteModal(<?= is_array($card) ? $card['id'] : $card->getId(); ?>)" class="btn btn-danger btn-sm">Delete</button>
+                        <?php $id = is_array($card) ? $card['id'] : $card->getId(); ?>
+                        <a href="/flashcards/view/<?= $id ?>" class="btn btn-info btn-sm">View</a>
+                        <button type="button" class="btn btn-primary btn-sm" onclick="openEditModal(<?= $id ?>)">Edit</button>
+                        <button onclick="openDeleteModal(<?= $id ?>)" class="btn btn-danger btn-sm">Delete</button>
                     </td>
                 </tr>
                 <?php endforeach; ?>
@@ -124,8 +135,6 @@
                     <td>
                         <?php $id = is_array($card) ? $card['id'] : $card->getId(); ?>
                         <a href="/flashcards/view/<?= $id ?>" class="btn btn-info btn-sm">View</a>
-                        <a href="/flashcards/edit/<?= $id ?>" class="btn btn-primary btn-sm">Edit</a>
-                        <button onclick="openDeleteModal(<?= $id ?>)" class="btn btn-danger btn-sm">Delete</button>
                     </td>
                 </tr>
                 <?php endforeach; ?>

@@ -134,16 +134,17 @@ html, body {
 .flashcard-table .btn-info:hover {
   transform: scale(1.05);
   background: #57a887;
+  color: white;
   box-shadow: 0 4px 12px rgba(129,199,132,0.5);
 }
 /* Edit button */
 .flashcard-table .btn-primary {
   background: #7aa9f7;
-  color: #fff;
 }
 .flashcard-table .btn-primary:hover {
   transform: scale(1.05);
   background: #5c8ed9;
+  color: white;
   box-shadow: 0 4px 12px rgba(100,181,246,0.5);
 }
 /* Delete button */

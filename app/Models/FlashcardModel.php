@@ -170,10 +170,10 @@ class FlashcardModel {
     }
 
     public function getTotalPublicFlashcards($search='') {
-        $sql = "SELECT COUNT(*) FROM flashcards WHERE status = 'public'";
+        $sql = "SELECT COUNT(*) FROM flashcards f JOIN users u ON f.user_id = u.id WHERE status = 'public'";
         $params = [];
         if ($search) {
-            $sql .= " AND (topic LIKE :search OR u.name LIKE :search) or u.username LIKE :search";
+            $sql .= " AND (f.topic LIKE :search OR u.name LIKE :search) or u.username LIKE :search";
             $params[':search'] = "%$search%";
         }
         $stmt = $this->pdo->prepare($sql);
@@ -211,6 +211,9 @@ class FlashcardModel {
     }
 
     public function update($id, $topic, $user_id, $status) {
+        if($this->getByID($id)->user_id !== $user_id) { //Check if user owns the flashcard
+            return false;
+        }
         $stmt = $this->pdo->prepare("UPDATE flashcards SET topic = :topic, user_id = :user_id, status = :status, updated_at = NOW() WHERE id = :id");
         return $stmt->execute([
             ':id' => $id,
@@ -220,7 +223,10 @@ class FlashcardModel {
         ]);
     }
 
-    public function delete($id) {
+    public function delete($id, $user_id) {
+        if($this->getByID($id)->user_id !== $user_id) { //Check if user owns the flashcard
+            return false;
+        }
         $stmt = $this->pdo->prepare("DELETE FROM flashcards WHERE id = :id");
         return $stmt->execute([':id' => $id]);
     }

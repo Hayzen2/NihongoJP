@@ -66,7 +66,7 @@
 }
 
 /* Create Button */
-.overlay .btn-add-flashcard {
+.overlay .btn-add-flashcard, .overlay .btn-edit-flashcard {
     background: linear-gradient(135deg, #ff6fa5, #ff3e78);
     color: #fff;
     padding: 10px 22px;
@@ -74,7 +74,7 @@
     margin-top: 15px;
     transition: all 0.2s;
 }
-.overlay .btn-add-flashcard:hover {
+.overlay .btn-add-flashcard:hover, .overlay .btn-edit-flashcard:hover {
     transform: scale(1.05);
     color: #fff;
     box-shadow: 0 8px 20px rgba(214,51,87,0.5);
@@ -97,7 +97,7 @@
 }
 
 /* New Question Button */
-.overlay .btn-new-question {
+.overlay .btn-new-question-edit, .overlay .btn-new-question-new, .overlay .btn-edit-question {
     background: linear-gradient(135deg, #ffd1d8, #ffb3c1);
     color: #b83b5e;
     border: none;
@@ -113,7 +113,7 @@
     box-shadow: 0 4px 12px rgba(255,77,109,0.3);
     transition: all 0.2s;
 }
-.btn-new-question:hover {
+.btn-new-question-edit:hover, .btn-new-question-new:hover, .btn-edit-question:hover {
     transform: scale(1.1);
     box-shadow: 0 5px 15px rgba(255,77,109,0.4);
 }

@@ -13,12 +13,13 @@ function setupFlashcardFilter(type) {
             <tr>
                 <td>${card.topic}</td>
                 ${type === 'public' ? `<td>${card.author || ''}</td>` : ''}
+                ${type === 'private' ? `<td>${card.status}</td>` : ''}
                 <td>${formatDate(card.created_at)}</td>
                 <td>${formatDate(card.updated_at)}</td>
                 <td>
                     <a href="/flashcards/view/${card.id}" class="btn btn-info btn-sm">View</a>
-                    <a href="/flashcards/edit/${card.id}" class="btn btn-primary btn-sm">Edit</a>
-                    <button onclick="openDeleteModal(${card.id})" class="btn btn-danger btn-sm">Delete</button>
+                    ${type === 'private' ? `<button type="button" class="btn btn-primary btn-sm" onclick="openEditModal(${card.id})">Edit</button> `: ''}
+                    ${type === 'private' ? `<button onclick="openDeleteModal(${card.id})" class="btn btn-danger btn-sm">Delete</button>` : ''}
                 </td>
             </tr>
         `).join('');
