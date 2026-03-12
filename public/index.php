@@ -7,14 +7,11 @@ require_once __DIR__ . '/../resources/helpers/render.php';
 use App\Controllers\HomepageController;
 use App\Controllers\AuthController;
 use App\Controllers\LessonController;
-use App\Controllers\ExerciseController;
 use App\Controllers\QuizController;
 use App\Controllers\RankController;
 use App\Controllers\UserController;
 use App\Controllers\FlashcardController;
-use App\Controllers\SubscriptionController;
 use App\Controllers\ContactController;
-use App\Controllers\BookController;
 use App\Controllers\ChatbotController;
 use Dotenv\Dotenv; // Load environment variables like GOOGLE_CLIENT_ID
 
@@ -53,12 +50,15 @@ $routes = [
     '/check-email' => [AuthController::class, 'checkEmailAvailability'],
     '/lessons'      => [LessonController::class, 'showLessonChoices'],
     '/lessons/:level/kanji'      => [LessonController::class, 'showLessonsByLevelKanji'],
+    '/lessons/:level/kanji/:title'      => [LessonController::class, 'showLessonsContentByTitleKanji'],
     '/lessons/:level/vocabulary'      => [LessonController::class, 'showLessonsByLevelVocabulary'],
     '/lessons/:level/grammar'      => [LessonController::class, 'showLessonsByLevelGrammar'],
     '/lessons/:level/grammar/:title'      => [LessonController::class, 'showLessonsContentByTitleGrammar'],
     '/buy-books'    => [BookController::class, 'showBooks'],
-    '/quizzes'      => [QuizController::class, 'showQuizLists'],
-    '/rank'         => [RankController::class, 'showRankLists'],
+    '/quizzes' => [QuizController::class, 'showQuizLists'],
+    '/quizzes/view/:id' => [QuizController::class, 'showQuiz'],
+    '/quizzes/submit' => [QuizController::class, 'submitAttempt'],
+    '/quizzes/retake/:id' => [QuizController::class, 'retakeQuiz'],
     '/profile'      => [UserController::class, 'showProfile'],
     '/flashcards'    => [FlashcardController::class, 'showFlashcardList'],
     '/flashcards/view/:id' => [FlashcardController::class, 'showFlashcardContent'],
@@ -66,7 +66,6 @@ $routes = [
     '/flashcards/get/:id' => [FlashcardController::class, 'getFlashcardContent'],
     '/flashcards/update/:id' => [FlashcardController::class, 'editFlashcard'],
     '/flashcards/delete/:id' => [FlashcardController::class, 'deleteFlashcard'],
-    '/subscription' => [SubscriptionController::class, 'showSubscriptionPlans'],
     '/logout'       => [AuthController::class, 'logout'],
     '/api/countries' => [AuthController::class, 'getCountries'],
     '/api/provinces/:countryId' => [AuthController::class, 'getProvincesByCountry'],

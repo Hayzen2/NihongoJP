@@ -30,13 +30,25 @@
             'flashcards'   => __DIR__ . '/sqls/flashcards.sql',  // has CREATE + INSERT
             'flashcards_qa'=> __DIR__ . '/sqls/flashcards_qa.sql',
             'books'        => __DIR__ . '/sqls/books.sql',
-            'vocabs'       => __DIR__ . '/sqls/vocabs.sql'
+            'vocabs'       => __DIR__ . '/sqls/vocabs.sql',
+            'quizzes'        => __DIR__ . '/sqls/quizzes.sql',
+            'kanjis'       => __DIR__ . '/sqls/kanjis.sql'
         ];
 
         foreach ($sqlFiles as $table => $file) {
-            // Import only if TABLE DOESN'T EXIST
-            if ($pdo->query("SHOW TABLES LIKE '$table'")->rowCount() == 0) {
+            // Check if table exists
+            $stmt = $pdo->query("SHOW TABLES LIKE '$table'");
+            $exists = $stmt->rowCount() > 0;
+
+            if (!$exists) {
+                // Table does not exist → create it + populate
                 $pdo->exec(file_get_contents($file));
+            } else {
+                // Table exists → only import if empty
+                $count = $pdo->query("SELECT COUNT(*) AS c FROM `$table`")->fetch()['c'] ?? 0;
+                if ($count == 0) {
+                    $pdo->exec(file_get_contents($file));
+                }
             }
         }
 
@@ -73,6 +85,27 @@
                         $data[2] ?? '',
                         $level // JLPT level not from CSV
                     ]);
+                }
+
+                fclose($handle);
+            }
+        }
+
+        // Only populate kanji table if empty
+        $countKanji = $pdo->query("SELECT COUNT(*) AS c FROM kanjis")->fetch()['c'];
+        if ($countKanji == 0) {
+            $csvFile = __DIR__ . '/csv/kanji/kanjis.csv'; 
+            if (file_exists($csvFile)) {
+                $handle = fopen($csvFile, 'r');
+                fgetcsv($handle); // skip header row
+
+                $stmt = $pdo->prepare("INSERT INTO kanjis (kanji, jlpt_level, meanings) VALUES (?, ?, ?)");
+
+                while (($row = fgetcsv($handle)) !== false) {
+                    [$kanji, $level, $meanings] = $row;
+                    // Convert pipe-separated meanings into JSON array
+                    $meanings = $meanings ? json_encode(explode('|', $meanings), JSON_UNESCAPED_UNICODE) : null;
+                    $stmt->execute([$kanji, $level, $meanings]);
                 }
 
                 fclose($handle);

@@ -26,10 +26,6 @@ Structured lessons, quizzes, flashcards, and an AI chatbot make learning engagin
 ### 📚 Learning Materials
 - Access curated **Japanese learning books** and resources directly from the platform.
 
-### 📊 Progress Tracking
-- Monitor quiz results and achievements.
-- Visualize learning progress to stay motivated.
-
 ### 🤖 AI Chatbot
 - Integrated AI assistant (Gemini-powered) to answer questions about lessons, examples, and vocabulary.
 
@@ -40,8 +36,11 @@ Structured lessons, quizzes, flashcards, and an AI chatbot make learning engagin
 ---
 
 ## 🔮 Future Features
+### Subscription
 - Subscription-based premium content.
-- More interactive exercises and gamification elements.
+### 📊 Progress Tracking
+- Monitor quiz results and achievements.
+- Visualize learning progress to stay motivated.
 
 ---
 

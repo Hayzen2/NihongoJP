@@ -18,19 +18,10 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/flashcards">Flashcard</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/subscription">Subscription</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/buy-books">Buy Books</a>
-                </li>
             </ul>
         </div>
         <div class="navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/rank">Rank</a>
-                </li>
                 <li class="nav-item">
                     <a class="nav-link">
                         <img src="<?= $_SESSION['user']['avatar'] ?? 'images/default-ava.png' ?>" alt="avatar" class="rounded-circle" width="30" height="30">

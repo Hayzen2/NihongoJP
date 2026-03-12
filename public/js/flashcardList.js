@@ -130,6 +130,15 @@ $('#edit-closeModal').on('click', () => $('#editFlashcardModal').addClass('d-non
 $('.overlay .btn-add-flashcard').on('click', () => $('#new-flashcard-form').submit());
 $('.overlay .btn-edit-flashcard').on('click', () => $('#edit-flashcard-form').submit());
 
+function openDeleteModal(id) {
+    const modal  = new bootstrap.Modal($('#deleteModal'));
+    modal.show();
+    const deleteButton = $('#confirmDelete');
+    deleteButton.off('click').on('click', function() {
+        window.location.href = `/flashcards/delete/${id}`;
+    });
+}
+
 // initialize
 $(function () {
   updateDeleteButtons(newContainer);

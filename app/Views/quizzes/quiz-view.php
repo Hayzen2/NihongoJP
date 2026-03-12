@@ -1,10 +1,10 @@
 <div class="container py-5">
-    <h1 class="main-title text-center mb-4">📚 Quizzes</h1>
+    <h1 class="main-title text-center mb-4"></h1>
     <div class="row">
         <?php foreach ($quizzes as $q): ?>
             <div class="col-md-6 mb-3">
                 <div class="card p-3">
-                    <h2><?= htmlspecialchars($q['title']) ?></h2>
+                    <h4><?= htmlspecialchars($q['title']) ?></h4>
                     <p><?= htmlspecialchars($q['description']) ?></p>
                     <p><small>JLPT: <?= htmlspecialchars($q['jlpt_level']) ?> • Time: <?= (int)$q['time_limit'] ?>s</small></p>
                     <?php if (!empty($lastAttempts[$q['id']])): ?>

@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS kanjis (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    kanji CHAR(1) NOT NULL,
+    jlpt_level VARCHAR(2) NOT NULL,
+    meanings JSON DEFAULT NULL
+) CHARACTER SET utf8mb4;

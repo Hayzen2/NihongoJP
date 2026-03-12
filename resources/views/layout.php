@@ -40,33 +40,47 @@
             <?php include __DIR__ . '/footer.php'; ?>
         </footer>
         <?php
-        // Floating chatbot
-        $currentPage = basename($_SERVER['REQUEST_URI']);
-        $excludeChatbotPages = [
-            'subscription', 
-            'login', 
-            'register',
-            'register/local',
-            'login/google',
-            'login/forgot-password',
-            'login/local',
-            'contact',
-            'api/countries',
-            'api/provinces',
-            'api/cities',
-            'login/forgot-password/send-otp',
-            'login/forgot-password/input-otp',
-            'login/forgot-password/verify-otp',
-            'login/forgot-password/reset-password-form',
-            'login/forgot-password/reset-expired',
-            'check-username',
-            'check-email'
-        ];
+            $path = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+            $segments = explode('/', $path);
 
-        if (!in_array($currentPage, $excludeChatbotPages)) {
-            include __DIR__ . '/chatbot.php';
-        }
+            // first segment (e.g. quizzes)
+            $segment1 = $segments[0] ?? '';
+
+            // second segment (e.g. view)
+            $segment2 = $segments[1] ?? '';
+
+            $excludeChatbotPatterns = [
+                ['quizzes'],
+                ['quizzes', 'view'],
+                ['quizzes', 'quiz-take'],
+                ['quizzes', 'submit'],
+                ['quizzes', 'retake'],
+                ['login'],
+                ['register'],
+                ['register', 'local'],
+                ['login', 'google'],
+                ['login', 'forgot-password'],
+                ['login', 'local'],
+                ['contact'],
+                ['api'],
+                ['check-username'],
+                ['check-email']
+            ];
+
+            $hideChatbot = false;
+
+            foreach ($excludeChatbotPatterns as $rule) {
+                if ($segment1 === $rule[0] && (!isset($rule[1]) || $segment2 === $rule[1])) {
+                    $hideChatbot = true;
+                    break;
+                }
+            }
+
+            if (!$hideChatbot) {
+                include __DIR__ . '/chatbot.php';
+            }
         ?>
+
         <!-- Page Specific JS -->
         <?php foreach ($scripts as $script): ?>
             <script src="/js/<?= $script; ?>.js"></script>
